@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage ('Build') {
             steps {
-                sh 'mvn clean package javadoc:jar source:jar'
+                sh 'mvn clean package'
             }
         }
 
@@ -19,7 +19,7 @@ pipeline {
                 branch "master"
             }
             steps {
-                sh 'mvn deploy -DskipTests'
+                sh 'mvn javadoc:jar source:jar deploy -DskipTests'
             }
         }
     }
