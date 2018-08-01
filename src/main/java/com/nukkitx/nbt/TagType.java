@@ -18,7 +18,8 @@ public enum TagType {
     STRING(StringTag.class),
     LIST(ListTag.class),
     COMPOUND(CompoundTag.class),
-    INT_ARRAY(IntArrayTag.class);
+    INT_ARRAY(IntArrayTag.class),
+    LONG_ARRAY(LongArrayTag.class);
 
     private static final TagType[] BY_ID;
     private static final Map<Class<? extends Tag>, TagType> BY_CLASS = new HashMap<>();

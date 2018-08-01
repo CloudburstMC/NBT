@@ -121,11 +121,33 @@ public class NBTOutputStream implements Closeable {
                 int[] iValue = iat.getValue();
                 if (encoding == NBTEncodingType.BEDROCK) {
                     VarInt.writeInt(output, iValue.length);
+
                 } else {
                     output.writeInt(iValue.length);
                 }
                 for (int i : iValue) {
-                    output.writeInt(i);
+                    if (encoding == NBTEncodingType.BEDROCK) {
+                        VarInt.writeInt(output, i);
+                    } else {
+                        output.writeInt(i);
+                    }
+                }
+                break;
+            case LONG_ARRAY:
+                LongArrayTag lat = (LongArrayTag) tag;
+                long[] longValues = lat.getValue();
+                if (encoding == NBTEncodingType.BEDROCK) {
+                    VarInt.writeInt(output, longValues.length);
+
+                } else {
+                    output.writeInt(longValues.length);
+                }
+                for (long l : longValues) {
+                    if (encoding == NBTEncodingType.BEDROCK) {
+                        VarInt.writeLong(output, l);
+                    } else {
+                        output.writeLong(l);
+                    }
                 }
                 break;
         }

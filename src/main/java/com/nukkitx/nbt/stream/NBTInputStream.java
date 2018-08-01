@@ -112,11 +112,18 @@ public class NBTInputStream implements Closeable {
                 return new ListTag(tagName, listType.getTagClass(), list);
             case INT_ARRAY:
                 int arraySz2 = encoding == BEDROCK ? VarInt.readInt(input) : input.readInt();
-                int[] valueBytesInt = new int[arraySz2];
+                int[] intValues = new int[arraySz2];
                 for (int i = 0; i < arraySz2; i++) {
-                    valueBytesInt[i] = input.readInt();
+                    intValues[i] = encoding == BEDROCK ? VarInt.readInt(input) : input.readInt();
                 }
-                return new IntArrayTag(tagName, valueBytesInt);
+                return new IntArrayTag(tagName, intValues);
+            case LONG_ARRAY:
+                int arraySz3 = encoding == BEDROCK ? VarInt.readInt(input) : input.readInt();
+                long[] longValues = new long[arraySz3];
+                for (int i = 0; i < arraySz3; i++) {
+                    longValues[i] = encoding == BEDROCK ? VarInt.readLong(input) : input.readLong();
+                }
+                return new LongArrayTag(tagName, longValues);
         }
 
         throw new IllegalArgumentException("Unknown type " + type);
