@@ -1,30 +1,21 @@
 package com.nukkitx.nbt.stream;
 
-import com.nukkitx.nbt.NBTEncodingType;
 import com.nukkitx.nbt.TagType;
 import com.nukkitx.nbt.tag.*;
-import com.nukkitx.nbt.util.VarInt;
 
 import java.io.Closeable;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-import static com.nukkitx.nbt.NBTIO.MAX_DEPTH;
+import static com.nukkitx.nbt.NbtUtils.MAX_DEPTH;
 
 public class NBTOutputStream implements Closeable {
     private final DataOutput output;
-    private final NBTEncodingType encoding;
     private boolean closed = false;
 
     public NBTOutputStream(DataOutput output) {
-        this(output, NBTEncodingType.NOTCHIAN);
-    }
-
-    public NBTOutputStream(DataOutput output, NBTEncodingType encoding) {
         this.output = Objects.requireNonNull(output, "output");
-        this.encoding = Objects.requireNonNull(encoding, "encoding");
     }
 
     public void write(Tag<?> tag) throws IOException {
@@ -49,7 +40,7 @@ public class NBTOutputStream implements Closeable {
 
         if (!skipHeader) {
             output.writeByte(type.ordinal() & 0xFF);
-            writeString(tag.getName());
+            output.writeUTF(tag.getName());
         }
 
         switch (type) {
@@ -65,11 +56,7 @@ public class NBTOutputStream implements Closeable {
                 break;
             case INT:
                 IntTag it = (IntTag) tag;
-                if (encoding == NBTEncodingType.BEDROCK) {
-                    VarInt.writeInt(output, it.getPrimitiveValue());
-                } else {
-                    output.writeInt(it.getPrimitiveValue());
-                }
+                output.writeInt(it.getPrimitiveValue());
                 break;
             case LONG:
                 LongTag lt = (LongTag) tag;
@@ -86,25 +73,17 @@ public class NBTOutputStream implements Closeable {
             case BYTE_ARRAY:
                 ByteArrayTag bat = (ByteArrayTag) tag;
                 byte[] bValue = bat.getValue();
-                if (encoding == NBTEncodingType.BEDROCK) {
-                    VarInt.writeInt(output, bValue.length);
-                } else {
-                    output.writeInt(bValue.length);
-                }
+                output.writeInt(bValue.length);
                 output.write(bValue);
                 break;
             case STRING:
                 StringTag strt = (StringTag) tag;
-                writeString(strt.getValue());
+                output.writeUTF(strt.getValue());
                 break;
             case LIST:
                 ListTag<?> listt = (ListTag<?>) tag;
                 output.writeByte(TagType.byClass(listt.getTagClass()).ordinal());
-                if (encoding == NBTEncodingType.BEDROCK) {
-                    VarInt.writeInt(output, listt.getValue().size());
-                } else {
-                    output.writeInt(listt.getValue().size());
-                }
+                output.writeInt(listt.getValue().size());
                 for (Tag<?> tag1 : listt.getValue()) {
                     serialize(tag1, true, depth + 1);
                 }
@@ -119,48 +98,20 @@ public class NBTOutputStream implements Closeable {
             case INT_ARRAY:
                 IntArrayTag iat = (IntArrayTag) tag;
                 int[] iValue = iat.getValue();
-                if (encoding == NBTEncodingType.BEDROCK) {
-                    VarInt.writeInt(output, iValue.length);
-
-                } else {
-                    output.writeInt(iValue.length);
-                }
+                output.writeInt(iValue.length);
                 for (int i : iValue) {
-                    if (encoding == NBTEncodingType.BEDROCK) {
-                        VarInt.writeInt(output, i);
-                    } else {
-                        output.writeInt(i);
-                    }
+                    output.writeInt(i);
                 }
                 break;
             case LONG_ARRAY:
                 LongArrayTag lat = (LongArrayTag) tag;
                 long[] longValues = lat.getValue();
-                if (encoding == NBTEncodingType.BEDROCK) {
-                    VarInt.writeInt(output, longValues.length);
-
-                } else {
-                    output.writeInt(longValues.length);
-                }
+                output.writeInt(longValues.length);
                 for (long l : longValues) {
-                    if (encoding == NBTEncodingType.BEDROCK) {
-                        VarInt.writeLong(output, l);
-                    } else {
-                        output.writeLong(l);
-                    }
+                    output.writeLong(l);
                 }
                 break;
         }
-    }
-
-    private void writeString(String name) throws IOException {
-        byte[] out = name.getBytes(StandardCharsets.UTF_8);
-        if (encoding == NBTEncodingType.BEDROCK) {
-            output.writeByte(out.length & 0xFF);
-        } else {
-            output.writeShort(out.length);
-        }
-        output.write(out);
     }
 
     @Override

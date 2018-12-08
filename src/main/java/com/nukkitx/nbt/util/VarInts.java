@@ -7,7 +7,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 @UtilityClass
-public class VarInt {
+public class VarInts {
 
     public static void writeInt(DataOutput buffer, int integer) throws IOException {
         encodeUnsigned(buffer, (integer << 1) ^ (integer >> 31));

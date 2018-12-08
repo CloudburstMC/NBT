@@ -47,6 +47,10 @@ public class CompoundTagBuilder {
         return tag(new IntArrayTag(name, value));
     }
 
+    public CompoundTagBuilder longArrayTag(String name, long[] value) {
+        return tag(new LongArrayTag(name, value));
+    }
+
     public CompoundTagBuilder intTag(String name, int value) {
         return tag(new IntTag(name, value));
     }

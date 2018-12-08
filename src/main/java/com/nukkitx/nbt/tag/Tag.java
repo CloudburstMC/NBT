@@ -30,7 +30,7 @@ public abstract class Tag<T> implements Comparable<Tag<T>> {
     @Override
     public String toString() {
         String append = ": ";
-        if (name != null && !name.equals("")) {
+        if (name != null && !name.isEmpty()) {
             append = "(\"" + this.getName() + "\")" + append;
         }
         return append;

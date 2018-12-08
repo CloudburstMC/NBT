@@ -1,31 +1,21 @@
 package com.nukkitx.nbt.stream;
 
-import com.nukkitx.nbt.NBTEncodingType;
 import com.nukkitx.nbt.TagType;
 import com.nukkitx.nbt.tag.*;
-import com.nukkitx.nbt.util.VarInt;
 
 import java.io.Closeable;
 import java.io.DataInput;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static com.nukkitx.nbt.NBTEncodingType.BEDROCK;
-import static com.nukkitx.nbt.NBTIO.MAX_DEPTH;
+import static com.nukkitx.nbt.NbtUtils.MAX_DEPTH;
 
 public class NBTInputStream implements Closeable {
     private final DataInput input;
-    private final NBTEncodingType encoding;
     private boolean closed = false;
 
     public NBTInputStream(DataInput input) {
-        this(input, NBTEncodingType.NOTCHIAN);
-    }
-
-    public NBTInputStream(DataInput input, NBTEncodingType encoding) {
         this.input = Objects.requireNonNull(input, "input");
-        this.encoding = Objects.requireNonNull(encoding, "encoding");
     }
 
     public Tag<?> readTag() throws IOException {
@@ -36,7 +26,7 @@ public class NBTInputStream implements Closeable {
         if (closed) {
             throw new IllegalStateException("Trying to read from a closed reader!");
         }
-        int typeId = input.readByte() & 0xFF;
+        int typeId = input.readUnsignedByte();
         TagType type = TagType.byId(typeId);
         if (type == null) {
             throw new IOException("Invalid encoding ID " + typeId);
@@ -52,10 +42,7 @@ public class NBTInputStream implements Closeable {
 
         String tagName = null;
         if (type != TagType.END && !skipName) {
-            int length = encoding == BEDROCK ? input.readByte() & 0xFF : input.readShort();
-            byte[] tagNameBytes = new byte[length];
-            input.readFully(tagNameBytes);
-            tagName = new String(tagNameBytes, StandardCharsets.UTF_8);
+            tagName = input.readUTF();
         }
 
         switch (type) {
@@ -65,14 +52,11 @@ public class NBTInputStream implements Closeable {
                 }
                 return EndTag.INSTANCE;
             case BYTE:
-                byte b = input.readByte();
-                return new ByteTag(tagName, b);
+                return new ByteTag(tagName, input.readByte());
             case SHORT:
-                short sh = input.readShort();
-                return new ShortTag(tagName, sh);
+                return new ShortTag(tagName, input.readShort());
             case INT:
-                int in = encoding == BEDROCK ? VarInt.readInt(input) : input.readInt();
-                return new IntTag(tagName, in);
+                return new IntTag(tagName, input.readInt());
             case LONG:
                 return new LongTag(tagName, input.readLong());
             case FLOAT:
@@ -80,15 +64,12 @@ public class NBTInputStream implements Closeable {
             case DOUBLE:
                 return new DoubleTag(tagName, input.readDouble());
             case BYTE_ARRAY:
-                int arraySz1 = encoding == BEDROCK ? VarInt.readInt(input) : input.readInt();
+                int arraySz1 = input.readInt();
                 byte[] valueBytesBa = new byte[arraySz1];
                 input.readFully(valueBytesBa);
                 return new ByteArrayTag(tagName, valueBytesBa);
             case STRING:
-                int length = encoding == BEDROCK ? input.readByte() : input.readUnsignedShort();
-                byte[] valueBytes = new byte[length];
-                input.readFully(valueBytes);
-                return new StringTag(tagName, new String(valueBytes, StandardCharsets.UTF_8));
+                return new StringTag(tagName, input.readUTF());
             case COMPOUND:
                 Map<String, Tag<?>> map = new HashMap<>();
                 Tag<?> inTag1;
@@ -97,31 +78,31 @@ public class NBTInputStream implements Closeable {
                 }
                 return new CompoundTag(tagName, map);
             case LIST:
-                int inId = input.readByte() & 0xFF;
+                int inId = input.readUnsignedByte();
                 TagType listType = TagType.byId(inId);
                 if (listType == null) {
                     String append = tagName == null ? "" : "('" + tagName + "')";
                     throw new IllegalArgumentException("Found invalid type in TAG_List" + append + ": " + inId);
                 }
                 List<Tag<?>> list = new ArrayList<>();
-                int listLength = encoding == BEDROCK ? VarInt.readInt(input) : input.readInt();
+                int listLength = input.readInt();
                 for (int i = 0; i < listLength; i++) {
                     list.add(deserialize(listType, true, depth + 1));
                 }
                 // Unchecked cast is expected
                 return new ListTag(tagName, listType.getTagClass(), list);
             case INT_ARRAY:
-                int arraySz2 = encoding == BEDROCK ? VarInt.readInt(input) : input.readInt();
+                int arraySz2 = input.readInt();
                 int[] intValues = new int[arraySz2];
                 for (int i = 0; i < arraySz2; i++) {
-                    intValues[i] = encoding == BEDROCK ? VarInt.readInt(input) : input.readInt();
+                    intValues[i] = input.readInt();
                 }
                 return new IntArrayTag(tagName, intValues);
             case LONG_ARRAY:
-                int arraySz3 = encoding == BEDROCK ? VarInt.readInt(input) : input.readInt();
+                int arraySz3 = input.readInt();
                 long[] longValues = new long[arraySz3];
                 for (int i = 0; i < arraySz3; i++) {
-                    longValues[i] = encoding == BEDROCK ? VarInt.readLong(input) : input.readLong();
+                    longValues[i] = input.readLong();
                 }
                 return new LongArrayTag(tagName, longValues);
         }
