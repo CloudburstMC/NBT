@@ -43,6 +43,6 @@ public class ByteTag extends Tag<Byte> {
 
     @Override
     public String toString() {
-        return "TAG_Byte_Array" + super.toString() + value;
+        return "TAG_Byte" + super.toString() + value;
     }
 }
