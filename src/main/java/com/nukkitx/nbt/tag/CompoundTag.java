@@ -2,6 +2,7 @@ package com.nukkitx.nbt.tag;
 
 import com.nukkitx.nbt.CompoundTagBuilder;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -58,17 +59,17 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
         return CompoundTagBuilder.from(this);
     }
 
+    @Nullable
+    @SuppressWarnings("unchecked")
     public <T extends Tag<?>> T get(String key) {
         return (T) value.get(key);
     }
 
-    public <T extends Tag<?>> void listen(String key, Consumer<T> listener) {
-        if (value.containsKey(key)) {
-            try {
-                listener.accept((T) value.get(key));
-            } catch (ClassCastException e) {
-                // ignore
-            }
+    @SuppressWarnings("unchecked")
+    public <T extends Tag<?>> void listen(String key, Class<T> clazz, Consumer<T> listener) {
+        Tag<?> value = this.value.get(key);
+        if (key != null && value.getClass().isInstance(clazz)) {
+            listener.accept((T) value);
         }
     }
 }
