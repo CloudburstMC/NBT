@@ -47,7 +47,7 @@ public class LittleEndianDataOutputStream implements DataOutput, Closeable {
 
     @Override
     public void writeShort(int value) throws IOException {
-        stream.writeShort(Integer.reverseBytes(value) >> 16);
+        stream.writeShort(Short.reverseBytes((short) value));
     }
 
     @Override

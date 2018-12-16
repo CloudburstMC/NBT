@@ -57,7 +57,7 @@ public class LittleEndianDataInputStream implements DataInput, Closeable {
 
     @Override
     public int readUnsignedShort() throws IOException {
-        return Integer.reverseBytes(stream.readUnsignedShort());
+        return Short.toUnsignedInt(Short.reverseBytes(stream.readShort()));
     }
 
     @Override
