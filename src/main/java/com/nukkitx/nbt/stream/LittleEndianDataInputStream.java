@@ -2,6 +2,7 @@ package com.nukkitx.nbt.stream;
 
 import javax.annotation.Nonnull;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class LittleEndianDataInputStream implements DataInput, Closeable {
     private final DataInputStream stream;
@@ -90,8 +91,11 @@ public class LittleEndianDataInputStream implements DataInput, Closeable {
         return stream.readLine();
     }
 
+    @Nonnull
     @Override
     public String readUTF() throws IOException {
-        return stream.readUTF();
+        byte[] bytes = new byte[readUnsignedShort()];
+        readFully(bytes);
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 }

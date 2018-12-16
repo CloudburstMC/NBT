@@ -2,6 +2,7 @@ package com.nukkitx.nbt.stream;
 
 import javax.annotation.Nonnull;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class LittleEndianDataOutputStream implements DataOutput, Closeable {
     private final DataOutputStream stream;
@@ -86,6 +87,8 @@ public class LittleEndianDataOutputStream implements DataOutput, Closeable {
 
     @Override
     public void writeUTF(@Nonnull String string) throws IOException {
-        stream.writeUTF(string);
+        byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
+        writeShort(bytes.length);
+        write(bytes);
     }
 }
