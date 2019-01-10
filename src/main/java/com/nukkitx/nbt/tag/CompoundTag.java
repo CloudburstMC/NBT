@@ -72,22 +72,22 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
         Objects.requireNonNull(key, "key");
         Objects.requireNonNull(clazz, "clazz");
 
-        Tag<?> value = this.value.get(key);
-        if (value != null && clazz.isAssignableFrom(value.getClass())) {
-            return (T) value.getValue();
+        Tag<?> tag = this.value.get(key);
+        if (tag != null && clazz.isAssignableFrom(tag.getValue().getClass())) {
+            return (T) tag.getValue();
         }
         return null;
     }
 
     @SuppressWarnings("unchecked")
-    public <T> void listen(@Nonnull String key, @Nonnull Class<Tag<T>> clazz, @Nonnull Consumer<T> listener) {
+    public <T> void listen(@Nonnull String key, @Nonnull Class<T> clazz, @Nonnull Consumer<T> listener) {
         Objects.requireNonNull(key, "key");
         Objects.requireNonNull(clazz, "clazz");
         Objects.requireNonNull(listener, "listener");
 
-        Tag<?> value = this.value.get(key);
-        if (value != null && clazz.isAssignableFrom(value.getClass())) {
-            listener.accept((T) value.getValue());
+        Tag<?> tag = this.value.get(key);
+        if (tag != null && clazz.isAssignableFrom(tag.getValue().getClass())) {
+            listener.accept((T) tag.getValue());
         }
     }
 }
