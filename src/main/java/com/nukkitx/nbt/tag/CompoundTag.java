@@ -2,6 +2,7 @@ package com.nukkitx.nbt.tag;
 
 import com.nukkitx.nbt.CompoundTagBuilder;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
@@ -65,11 +66,28 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
         return (T) value.get(key);
     }
 
+    @Nullable
     @SuppressWarnings("unchecked")
-    public <T extends Tag<?>> void listen(String key, Class<T> clazz, Consumer<T> listener) {
+    public <T> T getAs(String key, Class<Tag<T>> clazz) {
+        Objects.requireNonNull(key, "key");
+        Objects.requireNonNull(clazz, "clazz");
+
         Tag<?> value = this.value.get(key);
-        if (key != null && value.getClass().isInstance(clazz)) {
-            listener.accept((T) value);
+        if (value != null && clazz.isAssignableFrom(value.getClass())) {
+            return (T) value.getValue();
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> void listen(@Nonnull String key, @Nonnull Class<Tag<T>> clazz, @Nonnull Consumer<T> listener) {
+        Objects.requireNonNull(key, "key");
+        Objects.requireNonNull(clazz, "clazz");
+        Objects.requireNonNull(listener, "listener");
+
+        Tag<?> value = this.value.get(key);
+        if (value != null && clazz.isAssignableFrom(value.getClass())) {
+            listener.accept((T) value.getValue());
         }
     }
 }
