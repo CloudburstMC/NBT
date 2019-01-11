@@ -68,7 +68,7 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    public <T> T getAs(String key, Class<Tag<T>> clazz) {
+    public <T> T getAs(String key, Class<T> clazz) {
         Objects.requireNonNull(key, "key");
         Objects.requireNonNull(clazz, "clazz");
 
