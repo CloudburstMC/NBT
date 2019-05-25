@@ -4,9 +4,11 @@ import com.nukkitx.nbt.CompoundTagBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.function.Consumer;
 
+@ParametersAreNonnullByDefault
 public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     private final Map<String, Tag<?>> value;
 
@@ -79,15 +81,39 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
         return null;
     }
 
+    @Nonnull
     @SuppressWarnings("unchecked")
-    public <T> void listen(@Nonnull String key, @Nonnull Class<T> clazz, @Nonnull Consumer<T> listener) {
+    public <T> List<T> getListAs(String key, Class<T> clazz) {
         Objects.requireNonNull(key, "key");
         Objects.requireNonNull(clazz, "clazz");
-        Objects.requireNonNull(listener, "listener");
 
         Tag<?> tag = this.value.get(key);
-        if (tag != null && clazz.isAssignableFrom(tag.getValue().getClass())) {
-            listener.accept((T) tag.getValue());
+        if (!(tag instanceof ListTag)) {
+            return Collections.emptyList();
         }
+        List list = ((ListTag) tag).getValue();
+        if (list.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Object firstValue = list.get(0);
+        if (firstValue != null && clazz.isAssignableFrom(firstValue.getClass())) {
+            return (List<T>) list;
+        }
+        return Collections.emptyList();
+    }
+
+    public <T> void listen(String key, Class<T> clazz, Consumer<T> listener) {
+        Objects.requireNonNull(listener, "listener");
+
+        T value = this.getAs(key, clazz);
+        if (value != null) {
+            listener.accept(value);
+        }
+    }
+
+    public <T> void listenList(String key, Class<T> clazz, Consumer<List<T>> listener) {
+        Objects.requireNonNull(listener, "listener");
+
+        listener.accept(this.getListAs(key, clazz));
     }
 }
