@@ -1,18 +1,20 @@
 package com.nukkitx.nbt.stream;
 
 import com.nukkitx.nbt.util.VarInts;
-import lombok.RequiredArgsConstructor;
 
 import javax.annotation.Nonnull;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-@RequiredArgsConstructor
 public class NetworkDataInputStream implements DataInput, Closeable {
     private final DataInputStream stream;
 
     public NetworkDataInputStream(InputStream stream) {
         this.stream = new DataInputStream(stream);
+    }
+
+    public NetworkDataInputStream(DataInputStream stream) {
+        this.stream = stream;
     }
 
     @Override

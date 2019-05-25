@@ -1,13 +1,12 @@
 package com.nukkitx.nbt.util;
 
-import lombok.experimental.UtilityClass;
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-@UtilityClass
 public class VarInts {
+    private VarInts() {
+    }
 
     public static void writeInt(DataOutput buffer, int integer) throws IOException {
         encodeUnsigned(buffer, (integer << 1) ^ (integer >> 31));

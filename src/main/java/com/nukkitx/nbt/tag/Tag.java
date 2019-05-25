@@ -1,12 +1,13 @@
 package com.nukkitx.nbt.tag;
 
-import lombok.AllArgsConstructor;
-
 import javax.annotation.Nonnull;
 
-@AllArgsConstructor
 public abstract class Tag<T> implements Comparable<Tag<T>> {
     private final String name;
+
+    public Tag(String name) {
+        this.name = name;
+    }
 
     public abstract T getValue();
 

@@ -1,16 +1,16 @@
 package com.nukkitx.nbt;
 
 import com.nukkitx.nbt.tag.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CompoundTagBuilder {
     private final Map<String, Tag<?>> tagMap = new HashMap<>();
+
+    private CompoundTagBuilder() {
+    }
 
     public static CompoundTagBuilder builder() {
         return new CompoundTagBuilder();
