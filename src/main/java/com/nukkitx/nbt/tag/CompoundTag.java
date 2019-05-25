@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @ParametersAreNonnullByDefault
 public class CompoundTag extends Tag<Map<String, Tag<?>>> {
@@ -91,13 +92,13 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
         if (!(tag instanceof ListTag)) {
             return Collections.emptyList();
         }
-        List list = ((ListTag) tag).getValue();
+        List<Tag> list = ((ListTag) tag).getValue();
         if (list.isEmpty()) {
             return Collections.emptyList();
         }
-        Object firstValue = list.get(0);
+        Object firstValue = list.get(0).getValue();
         if (firstValue != null && clazz.isAssignableFrom(firstValue.getClass())) {
-            return (List<T>) list;
+            return (List<T>) list.stream().map(Tag::getValue).collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
