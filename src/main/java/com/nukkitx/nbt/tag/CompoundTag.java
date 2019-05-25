@@ -75,9 +75,21 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
         Objects.requireNonNull(key, "key");
         Objects.requireNonNull(clazz, "clazz");
 
+        // Convert Byte tags to booleans
+        boolean boolClass = false;
+        if (clazz == Boolean.class) {
+            boolClass = true;
+            clazz = (Class) Byte.class;
+        }
+
         Tag<?> tag = this.value.get(key);
         if (tag != null && clazz.isAssignableFrom(tag.getValue().getClass())) {
-            return (T) tag.getValue();
+            if (boolClass) {
+                ByteTag byteTag = (ByteTag) tag;
+                return (T) (Boolean) byteTag.getAsBoolean();
+            } else {
+                return (T) tag.getValue();
+            }
         }
         return null;
     }
@@ -96,9 +108,21 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
         if (list.isEmpty()) {
             return Collections.emptyList();
         }
+
+        // Convert Byte tags to booleans
+        boolean boolClass = false;
+        if (clazz == Boolean.class) {
+            boolClass = true;
+            clazz = (Class) Byte.class;
+        }
+
         Object firstValue = list.get(0).getValue();
         if (firstValue != null && clazz.isAssignableFrom(firstValue.getClass())) {
-            return (List<T>) list.stream().map(Tag::getValue).collect(Collectors.toList());
+            if (boolClass) {
+                return (List<T>) list.stream().map(byteTag -> ((ByteTag) byteTag).getAsBoolean()).collect(Collectors.toList());
+            } else {
+                return (List<T>) list.stream().map(Tag::getValue).collect(Collectors.toList());
+            }
         }
         return Collections.emptyList();
     }

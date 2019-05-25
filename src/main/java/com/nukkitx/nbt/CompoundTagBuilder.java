@@ -27,6 +27,10 @@ public class CompoundTagBuilder {
         return this;
     }
 
+    public CompoundTagBuilder booleanTag(String name, boolean value) {
+        return tag(new ByteTag(name, (byte) (value ? 1 : 0)));
+    }
+
     public CompoundTagBuilder byteTag(String name, byte value) {
         return tag(new ByteTag(name, value));
     }
