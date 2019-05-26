@@ -1,16 +1,28 @@
 package com.nukkitx.nbt.tag;
 
 import com.nukkitx.nbt.CompoundTagBuilder;
+import com.nukkitx.nbt.util.function.BooleanConsumer;
+import com.nukkitx.nbt.util.function.ByteConsumer;
+import com.nukkitx.nbt.util.function.FloatConsumer;
+import com.nukkitx.nbt.util.function.ShortConsumer;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
+import java.util.function.DoubleConsumer;
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 
+@Immutable
 @ParametersAreNonnullByDefault
 public class CompoundTag extends Tag<Map<String, Tag<?>>> {
+    public static final CompoundTag EMPTY = new CompoundTag("", Collections.emptyMap());
+    public static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
+    public static final int[] EMPTY_INT_ARRAY = new int[0];
+    public static final long[] EMPTY_LONG_ARRAY = new long[0];
+
     private final Map<String, Tag<?>> value;
 
     public CompoundTag(String name, Map<String, Tag<?>> value) {
@@ -32,6 +44,269 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     @Override
     public Map<String, Tag<?>> getValue() {
         return value;
+    }
+
+    public CompoundTagBuilder toBuilder() {
+        return CompoundTagBuilder.from(this);
+    }
+
+    public boolean contains(String key) {
+        return this.value.containsKey(key);
+    }
+
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public <T extends Tag<?>> T get(String key) {
+        return (T) this.value.get(key);
+    }
+
+    public boolean getAsBoolean(String key) {
+        return this.getAsBoolean(key, false);
+    }
+
+    public boolean getAsBoolean(String key, boolean defaultValue) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof ByteTag) {
+            return ((ByteTag) tag).getAsBoolean();
+        }
+        return defaultValue;
+    }
+
+    public void listenForBoolean(String key, BooleanConsumer consumer) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof ByteTag) {
+            consumer.accept(((ByteTag) tag).getAsBoolean());
+        }
+    }
+
+    public byte getAsByte(String key) {
+        return this.getAsByte(key, (byte) 0);
+    }
+
+    public byte getAsByte(String key, byte defaultValue) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof ByteTag) {
+            return ((ByteTag) tag).getPrimitiveValue();
+        }
+        return defaultValue;
+    }
+
+    public void listenForByte(String key, ByteConsumer consumer) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof ByteTag) {
+            consumer.accept(((ByteTag) tag).getPrimitiveValue());
+        }
+    }
+
+    public short getAsShort(String key) {
+        return this.getAsShort(key, (short) 0);
+    }
+
+    public short getAsShort(String key, short defaultValue) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof ShortTag) {
+            return ((ShortTag) tag).getPrimitiveValue();
+        }
+        return defaultValue;
+    }
+
+    public void listenForShort(String key, ShortConsumer consumer) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof ShortTag) {
+            consumer.accept(((ShortTag) tag).getPrimitiveValue());
+        }
+    }
+
+    public int getAsInt(String key) {
+        return this.getAsInt(key, 0);
+    }
+
+    public int getAsInt(String key, int defaultValue) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof IntTag) {
+            return ((IntTag) tag).getPrimitiveValue();
+        }
+        return defaultValue;
+    }
+
+    public void listenForInt(String key, IntConsumer consumer) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof IntTag) {
+            consumer.accept(((IntTag) tag).getPrimitiveValue());
+        }
+    }
+
+    public long getAsLong(String key) {
+        return this.getAsLong(key, 0L);
+    }
+
+    public long getAsLong(String key, long defaultValue) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof LongTag) {
+            return ((LongTag) tag).getPrimitiveValue();
+        }
+        return defaultValue;
+    }
+
+    public void listenForLong(String key, LongConsumer consumer) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof LongTag) {
+            consumer.accept(((LongTag) tag).getPrimitiveValue());
+        }
+    }
+
+    public float getAsFloat(String key) {
+        return this.getAsFloat(key, 0F);
+    }
+
+    public float getAsFloat(String key, float defaultValue) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof FloatTag) {
+            return ((FloatTag) tag).getPrimitiveValue();
+        }
+        return defaultValue;
+    }
+
+    public void listenForFloat(String key, FloatConsumer consumer) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof FloatTag) {
+            consumer.accept(((FloatTag) tag).getPrimitiveValue());
+        }
+    }
+
+    public double getAsDouble(String key) {
+        return this.getAsDouble(key, 0D);
+    }
+
+    public double getAsDouble(String key, double defaultValue) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof DoubleTag) {
+            return ((DoubleTag) tag).getPrimitiveValue();
+        }
+        return defaultValue;
+    }
+
+    public void listenForDouble(String key, DoubleConsumer consumer) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof DoubleTag) {
+            consumer.accept(((DoubleTag) tag).getPrimitiveValue());
+        }
+    }
+
+    public String getAsString(String key) {
+        return this.getAsString(key, "");
+    }
+
+    public String getAsString(String key, @Nullable String defaultValue) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof StringTag) {
+            return ((StringTag) tag).getValue();
+        }
+        return defaultValue;
+    }
+
+    public void listenForString(String key, Consumer<String> consumer) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof StringTag) {
+            consumer.accept(((StringTag) tag).getValue());
+        }
+    }
+
+    public byte[] getAsByteArray(String key) {
+        return this.getAsByteArray(key, EMPTY_BYTE_ARRAY);
+    }
+
+    public byte[] getAsByteArray(String key, @Nullable byte[] defaultValue) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof ByteArrayTag) {
+            return ((ByteArrayTag) tag).getValue();
+        }
+        return defaultValue;
+    }
+
+    public void listenForByteArray(String key, Consumer<byte[]> consumer) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof ByteArrayTag) {
+            consumer.accept(((ByteArrayTag) tag).getValue());
+        }
+    }
+
+    public int[] getAsIntArray(String key) {
+        return this.getAsIntArray(key, EMPTY_INT_ARRAY);
+    }
+
+    public int[] getAsIntArray(String key, @Nullable int[] defaultValue) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof IntArrayTag) {
+            return ((IntArrayTag) tag).getValue();
+        }
+        return defaultValue;
+    }
+
+    public void listenForIntArray(String key, Consumer<int[]> consumer) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof IntArrayTag) {
+            consumer.accept(((IntArrayTag) tag).getValue());
+        }
+    }
+
+    public long[] getAsLongArray(String key) {
+        return this.getAsLongArray(key, EMPTY_LONG_ARRAY);
+    }
+
+    public long[] getAsLongArray(String key, @Nullable long[] defaultValue) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof LongArrayTag) {
+            return ((LongArrayTag) tag).getValue();
+        }
+        return defaultValue;
+    }
+
+    public void listenForLongArray(String key, Consumer<long[]> consumer) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof LongArrayTag) {
+            consumer.accept(((LongArrayTag) tag).getValue());
+        }
+    }
+
+    public CompoundTag getAsCompound(String key) {
+        return this.getAsCompound(key, EMPTY);
+    }
+
+    public CompoundTag getAsCompound(String key, @Nullable CompoundTag defaultValue) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof CompoundTag) {
+            return (CompoundTag) tag;
+        }
+        return defaultValue;
+    }
+
+    public void listenForCompound(String key, Consumer<CompoundTag> consumer) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof CompoundTag) {
+            consumer.accept((CompoundTag) tag);
+        }
+    }
+
+    public <T extends Tag<?>> List<T> getAsList(String key, Class<T> tagClass) {
+        return this.getAsList(key, tagClass, Collections.emptyList());
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Tag<?>> List<T> getAsList(String key, Class<T> tagClass, @Nullable List<T> defaultValue) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof ListTag && ((ListTag) tag).getTagClass() == tagClass) {
+            return ((ListTag<T>) tag).getValue();
+        }
+        return defaultValue;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Tag<?>> void listenForList(String key, Class<T> tagClass, Consumer<List<T>> consumer) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof ListTag && ((ListTag) tag).getTagClass() == tagClass) {
+            consumer.accept(((ListTag<T>) tag).getValue());
+        }
     }
 
     @Override
@@ -57,88 +332,5 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
         }
         builder.append(")");
         return builder.toString();
-    }
-
-    public CompoundTagBuilder toBuilder() {
-        return CompoundTagBuilder.from(this);
-    }
-
-    @Nullable
-    @SuppressWarnings("unchecked")
-    public <T extends Tag<?>> T get(String key) {
-        return (T) value.get(key);
-    }
-
-    @Nullable
-    @SuppressWarnings("unchecked")
-    public <T> T getAs(String key, Class<T> clazz) {
-        Objects.requireNonNull(key, "key");
-        Objects.requireNonNull(clazz, "clazz");
-
-        // Convert Byte tags to booleans
-        boolean boolClass = false;
-        if (clazz == Boolean.class) {
-            boolClass = true;
-            clazz = (Class) Byte.class;
-        }
-
-        Tag<?> tag = this.value.get(key);
-        if (tag != null && clazz.isAssignableFrom(tag.getValue().getClass())) {
-            if (boolClass) {
-                ByteTag byteTag = (ByteTag) tag;
-                return (T) (Boolean) byteTag.getAsBoolean();
-            } else {
-                return (T) tag.getValue();
-            }
-        }
-        return null;
-    }
-
-    @Nonnull
-    @SuppressWarnings("unchecked")
-    public <T> List<T> getListAs(String key, Class<T> clazz) {
-        Objects.requireNonNull(key, "key");
-        Objects.requireNonNull(clazz, "clazz");
-
-        Tag<?> tag = this.value.get(key);
-        if (!(tag instanceof ListTag)) {
-            return Collections.emptyList();
-        }
-        List<Tag> list = ((ListTag) tag).getValue();
-        if (list.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        // Convert Byte tags to booleans
-        boolean boolClass = false;
-        if (clazz == Boolean.class) {
-            boolClass = true;
-            clazz = (Class) Byte.class;
-        }
-
-        Object firstValue = list.get(0).getValue();
-        if (firstValue != null && clazz.isAssignableFrom(firstValue.getClass())) {
-            if (boolClass) {
-                return (List<T>) list.stream().map(byteTag -> ((ByteTag) byteTag).getAsBoolean()).collect(Collectors.toList());
-            } else {
-                return (List<T>) list.stream().map(Tag::getValue).collect(Collectors.toList());
-            }
-        }
-        return Collections.emptyList();
-    }
-
-    public <T> void listen(String key, Class<T> clazz, Consumer<T> listener) {
-        Objects.requireNonNull(listener, "listener");
-
-        T value = this.getAs(key, clazz);
-        if (value != null) {
-            listener.accept(value);
-        }
-    }
-
-    public <T> void listenList(String key, Class<T> clazz, Consumer<List<T>> listener) {
-        Objects.requireNonNull(listener, "listener");
-
-        listener.accept(this.getListAs(key, clazz));
     }
 }
