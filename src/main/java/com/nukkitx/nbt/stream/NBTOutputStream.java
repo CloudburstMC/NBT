@@ -72,9 +72,9 @@ public class NBTOutputStream implements Closeable {
                 break;
             case BYTE_ARRAY:
                 ByteArrayTag bat = (ByteArrayTag) tag;
-                byte[] bValue = bat.getValue();
-                output.writeInt(bValue.length);
-                output.write(bValue);
+                byte[] byteArray = bat.getValue();
+                output.writeInt(byteArray.length);
+                output.write(byteArray);
                 break;
             case STRING:
                 StringTag strt = (StringTag) tag;
@@ -93,7 +93,7 @@ public class NBTOutputStream implements Closeable {
                 for (Tag<?> tag1 : compoundTag.getValue().values()) {
                     serialize(tag1, false, depth + 1);
                 }
-                output.writeByte(0);
+                output.writeByte(0); // End tag
                 break;
             case INT_ARRAY:
                 IntArrayTag iat = (IntArrayTag) tag;

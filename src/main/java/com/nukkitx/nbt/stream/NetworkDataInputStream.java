@@ -3,68 +3,19 @@ package com.nukkitx.nbt.stream;
 import com.nukkitx.nbt.util.VarInts;
 
 import javax.annotation.Nonnull;
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public class NetworkDataInputStream implements DataInput, Closeable {
-    private final DataInputStream stream;
+public class NetworkDataInputStream extends LittleEndianDataInputStream {
 
     public NetworkDataInputStream(InputStream stream) {
-        this.stream = new DataInputStream(stream);
+        super(stream);
     }
 
     public NetworkDataInputStream(DataInputStream stream) {
-        this.stream = stream;
-    }
-
-    @Override
-    public void close() throws IOException {
-        stream.close();
-    }
-
-    @Override
-    public void readFully(@Nonnull byte[] bytes) throws IOException {
-        stream.readFully(bytes);
-    }
-
-    @Override
-    public void readFully(@Nonnull byte[] bytes, int offset, int length) throws IOException {
-        stream.readFully(bytes, offset, length);
-    }
-
-    @Override
-    public int skipBytes(int amount) throws IOException {
-        return stream.skipBytes(amount);
-    }
-
-    @Override
-    public boolean readBoolean() throws IOException {
-        return stream.readBoolean();
-    }
-
-    @Override
-    public byte readByte() throws IOException {
-        return stream.readByte();
-    }
-
-    @Override
-    public int readUnsignedByte() throws IOException {
-        return stream.readUnsignedByte();
-    }
-
-    @Override
-    public short readShort() throws IOException {
-        return Short.reverseBytes(stream.readShort());
-    }
-
-    @Override
-    public int readUnsignedShort() throws IOException {
-        return Short.toUnsignedInt(Short.reverseBytes(stream.readShort()));
-    }
-
-    @Override
-    public char readChar() throws IOException {
-        return Character.reverseBytes(stream.readChar());
+        super(stream);
     }
 
     @Override
@@ -75,22 +26,6 @@ public class NetworkDataInputStream implements DataInput, Closeable {
     @Override
     public long readLong() throws IOException {
         return VarInts.readLong(stream);
-    }
-
-    @Override
-    public float readFloat() throws IOException {
-        return Float.intBitsToFloat(Integer.reverseBytes(stream.readInt()));
-    }
-
-    @Override
-    public double readDouble() throws IOException {
-        return Double.longBitsToDouble(Long.reverseBytes(stream.readLong()));
-    }
-
-    @Override
-    @Deprecated
-    public String readLine() throws IOException {
-        return stream.readLine();
     }
 
     @Override

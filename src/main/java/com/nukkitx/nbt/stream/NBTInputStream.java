@@ -40,7 +40,7 @@ public class NBTInputStream implements Closeable {
             throw new IllegalArgumentException("NBT compound is too deeply nested");
         }
 
-        String tagName = null;
+        String tagName = "";
         if (type != TagType.END && !skipName) {
             tagName = input.readUTF();
         }
@@ -64,10 +64,10 @@ public class NBTInputStream implements Closeable {
             case DOUBLE:
                 return new DoubleTag(tagName, input.readDouble());
             case BYTE_ARRAY:
-                int arraySz1 = input.readInt();
-                byte[] valueBytesBa = new byte[arraySz1];
-                input.readFully(valueBytesBa);
-                return new ByteArrayTag(tagName, valueBytesBa);
+                int arraySize = input.readInt();
+                byte[] byteArray = new byte[arraySize];
+                input.readFully(byteArray);
+                return new ByteArrayTag(tagName, byteArray);
             case STRING:
                 return new StringTag(tagName, input.readUTF());
             case COMPOUND:
@@ -81,30 +81,29 @@ public class NBTInputStream implements Closeable {
                 int inId = input.readUnsignedByte();
                 TagType listType = TagType.byId(inId);
                 if (listType == null) {
-                    String append = tagName == null ? "" : "('" + tagName + "')";
-                    throw new IllegalArgumentException("Found invalid type in TAG_List" + append + ": " + inId);
+                    throw new IllegalArgumentException("Found invalid type in TAG_List('" + tagName + "'): " + inId);
                 }
                 List<Tag<?>> list = new ArrayList<>();
                 int listLength = input.readInt();
                 for (int i = 0; i < listLength; i++) {
                     list.add(deserialize(listType, true, depth + 1));
                 }
-                // Unchecked cast is expected
+                //noinspection unchecked
                 return new ListTag(tagName, listType.getTagClass(), list);
             case INT_ARRAY:
-                int arraySz2 = input.readInt();
-                int[] intValues = new int[arraySz2];
-                for (int i = 0; i < arraySz2; i++) {
-                    intValues[i] = input.readInt();
+                arraySize = input.readInt();
+                int[] intArray = new int[arraySize];
+                for (int i = 0; i < arraySize; i++) {
+                    intArray[i] = input.readInt();
                 }
-                return new IntArrayTag(tagName, intValues);
+                return new IntArrayTag(tagName, intArray);
             case LONG_ARRAY:
-                int arraySz3 = input.readInt();
-                long[] longValues = new long[arraySz3];
-                for (int i = 0; i < arraySz3; i++) {
-                    longValues[i] = input.readLong();
+                arraySize = input.readInt();
+                long[] longArray = new long[arraySize];
+                for (int i = 0; i < arraySize; i++) {
+                    longArray[i] = input.readLong();
                 }
-                return new LongArrayTag(tagName, longValues);
+                return new LongArrayTag(tagName, longArray);
         }
 
         throw new IllegalArgumentException("Unknown type " + type);
