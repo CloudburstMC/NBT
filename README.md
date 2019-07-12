@@ -6,7 +6,7 @@ An Named Binary Tag library built including VarInt support introduced by Minecra
     <repositories>
         <repository>
             <id>nukkitx-repo</id>
-            <url>https://repo.nukkitx.com/snapshot</url>
+            <url>https://repo.nukkitx.com/maven-releases</url>
         </repository>
     </repositories>
 
@@ -14,7 +14,7 @@ An Named Binary Tag library built including VarInt support introduced by Minecra
         <dependency>
             <groupId>com.nukkitx</groupId>
             <artifactId>nbt</artifactId>
-            <version>1.1.4</version>
+            <version>1.3.2</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
