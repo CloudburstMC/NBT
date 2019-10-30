@@ -19,12 +19,9 @@ public class NBTOutputStream implements Closeable {
     }
 
     public void write(Tag<?> tag) throws IOException {
+        Objects.requireNonNull(tag, "tag");
         if (closed) {
             throw new IllegalStateException("closed");
-        }
-        Objects.requireNonNull(tag, "tag");
-        if (!(tag instanceof CompoundTag)) {
-            throw new IllegalArgumentException("Trying to write a non-compound tag!");
         }
         serialize(tag, false, 0);
     }
