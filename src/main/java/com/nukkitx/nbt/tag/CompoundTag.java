@@ -297,7 +297,7 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     @SuppressWarnings("unchecked")
     public <T extends Tag<?>> List<T> getAsList(String key, Class<T> tagClass, @Nullable List<T> defaultValue) {
         Tag tag = this.value.get(key);
-        if (tag instanceof ListTag && ((ListTag) tag).getTagClass() == tagClass) {
+        if (tag instanceof ListTag && tagClass.isAssignableFrom(((ListTag) tag).getTagClass())) {
             return ((ListTag<T>) tag).getValue();
         }
         return defaultValue;
@@ -306,7 +306,7 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     @SuppressWarnings("unchecked")
     public <T extends Tag<?>> void listenForList(String key, Class<T> tagClass, Consumer<List<T>> consumer) {
         Tag tag = this.value.get(key);
-        if (tag instanceof ListTag && ((ListTag) tag).getTagClass() == tagClass) {
+        if (tag instanceof ListTag && tagClass.isAssignableFrom(((ListTag) tag).getTagClass())) {
             consumer.accept(((ListTag<T>) tag).getValue());
         }
     }
