@@ -2,7 +2,7 @@ package com.nukkitx.nbt.tag;
 
 import java.util.Objects;
 
-public class ShortTag extends Tag<Short> {
+public class ShortTag extends NumberTag<Short> {
     private final short value;
 
     public ShortTag(String name, short value) {

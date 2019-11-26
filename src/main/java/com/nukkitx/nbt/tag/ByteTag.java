@@ -2,7 +2,7 @@ package com.nukkitx.nbt.tag;
 
 import java.util.Objects;
 
-public class ByteTag extends Tag<Byte> {
+public class ByteTag extends NumberTag<Byte> {
     private final byte value;
 
     public ByteTag(String name, byte value) {

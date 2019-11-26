@@ -2,7 +2,7 @@ package com.nukkitx.nbt.tag;
 
 import java.util.Objects;
 
-public class DoubleTag extends Tag<Double> {
+public class DoubleTag extends NumberTag<Double> {
     private final double value;
 
     public DoubleTag(String name, double value) {

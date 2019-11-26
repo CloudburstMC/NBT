@@ -31,9 +31,6 @@ public class NBTOutputStream implements Closeable {
             throw new IllegalArgumentException("Reached depth limit");
         }
         TagType type = TagType.byClass(tag.getClass());
-        if (type == null) {
-            throw new IllegalArgumentException("Tag " + tag + " is not valid.");
-        }
 
         if (!skipHeader) {
             output.writeByte(type.ordinal() & 0xFF);
@@ -44,44 +41,44 @@ public class NBTOutputStream implements Closeable {
             case END:
                 break;
             case BYTE:
-                ByteTag bt = (ByteTag) tag;
-                output.writeByte(bt.getPrimitiveValue());
+                ByteTag byteTag = (ByteTag) tag;
+                output.writeByte(byteTag.getPrimitiveValue());
                 break;
             case SHORT:
-                ShortTag st = (ShortTag) tag;
-                output.writeShort(st.getPrimitiveValue());
+                ShortTag shortTag = (ShortTag) tag;
+                output.writeShort(shortTag.getPrimitiveValue());
                 break;
             case INT:
-                IntTag it = (IntTag) tag;
-                output.writeInt(it.getPrimitiveValue());
+                IntTag intTag = (IntTag) tag;
+                output.writeInt(intTag.getPrimitiveValue());
                 break;
             case LONG:
-                LongTag lt = (LongTag) tag;
-                output.writeLong(lt.getPrimitiveValue());
+                LongTag longTag = (LongTag) tag;
+                output.writeLong(longTag.getPrimitiveValue());
                 break;
             case FLOAT:
-                FloatTag ft = (FloatTag) tag;
-                output.writeFloat(ft.getPrimitiveValue());
+                FloatTag floatTag = (FloatTag) tag;
+                output.writeFloat(floatTag.getPrimitiveValue());
                 break;
             case DOUBLE:
-                DoubleTag dt = (DoubleTag) tag;
-                output.writeDouble(dt.getPrimitiveValue());
+                DoubleTag doubleTag = (DoubleTag) tag;
+                output.writeDouble(doubleTag.getPrimitiveValue());
                 break;
             case BYTE_ARRAY:
-                ByteArrayTag bat = (ByteArrayTag) tag;
-                byte[] byteArray = bat.getValue();
+                ByteArrayTag byteArrayTag = (ByteArrayTag) tag;
+                byte[] byteArray = byteArrayTag.getValue();
                 output.writeInt(byteArray.length);
                 output.write(byteArray);
                 break;
             case STRING:
-                StringTag strt = (StringTag) tag;
-                output.writeUTF(strt.getValue());
+                StringTag stringTag = (StringTag) tag;
+                output.writeUTF(stringTag.getValue());
                 break;
             case LIST:
-                ListTag<?> listt = (ListTag<?>) tag;
-                output.writeByte(TagType.byClass(listt.getTagClass()).ordinal());
-                output.writeInt(listt.getValue().size());
-                for (Tag<?> tag1 : listt.getValue()) {
+                ListTag<?> listTag = (ListTag<?>) tag;
+                output.writeByte(TagType.byClass(listTag.getTagClass()).ordinal());
+                output.writeInt(listTag.getValue().size());
+                for (Tag<?> tag1 : listTag.getValue()) {
                     serialize(tag1, true, depth + 1);
                 }
                 break;
@@ -93,16 +90,16 @@ public class NBTOutputStream implements Closeable {
                 output.writeByte(0); // End tag
                 break;
             case INT_ARRAY:
-                IntArrayTag iat = (IntArrayTag) tag;
-                int[] iValue = iat.getValue();
+                IntArrayTag intArrayTag = (IntArrayTag) tag;
+                int[] iValue = intArrayTag.getValue();
                 output.writeInt(iValue.length);
                 for (int i : iValue) {
                     output.writeInt(i);
                 }
                 break;
             case LONG_ARRAY:
-                LongArrayTag lat = (LongArrayTag) tag;
-                long[] longValues = lat.getValue();
+                LongArrayTag longArrayTag = (LongArrayTag) tag;
+                long[] longValues = longArrayTag.getValue();
                 output.writeInt(longValues.length);
                 for (long l : longValues) {
                     output.writeLong(l);

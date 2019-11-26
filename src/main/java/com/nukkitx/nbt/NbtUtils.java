@@ -8,7 +8,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 public class NbtUtils {
-    public static int MAX_DEPTH = 16;
+    public static final int MAX_DEPTH = 16;
 
     private NbtUtils() {
     }

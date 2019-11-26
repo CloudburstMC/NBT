@@ -2,7 +2,7 @@ package com.nukkitx.nbt.tag;
 
 import java.util.Objects;
 
-public class FloatTag extends Tag<Float> {
+public class FloatTag extends NumberTag<Float> {
     private final float value;
 
     public FloatTag(String name, float value) {

@@ -1,10 +1,7 @@
 package com.nukkitx.nbt.tag;
 
 import com.nukkitx.nbt.CompoundTagBuilder;
-import com.nukkitx.nbt.util.function.BooleanConsumer;
-import com.nukkitx.nbt.util.function.ByteConsumer;
-import com.nukkitx.nbt.util.function.FloatConsumer;
-import com.nukkitx.nbt.util.function.ShortConsumer;
+import com.nukkitx.nbt.util.function.*;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -19,15 +16,20 @@ import java.util.function.LongConsumer;
 @ParametersAreNonnullByDefault
 public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     public static final CompoundTag EMPTY = new CompoundTag("", Collections.emptyMap());
-    public static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
-    public static final int[] EMPTY_INT_ARRAY = new int[0];
-    public static final long[] EMPTY_LONG_ARRAY = new long[0];
+
+    private static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
+    private static final int[] EMPTY_INT_ARRAY = new int[0];
+    private static final long[] EMPTY_LONG_ARRAY = new long[0];
 
     private final Map<String, Tag<?>> value;
 
     public CompoundTag(String name, Map<String, Tag<?>> value) {
         super(name);
         this.value = Collections.unmodifiableMap(new HashMap<>(Objects.requireNonNull(value, "value")));
+    }
+
+    public static CompoundTagBuilder builder() {
+        return CompoundTagBuilder.builder();
     }
 
     public static CompoundTag createFromList(String name, List<Tag<?>> list) {
@@ -306,6 +308,25 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
         Tag tag = this.value.get(key);
         if (tag instanceof ListTag && ((ListTag) tag).getTagClass() == tagClass) {
             consumer.accept(((ListTag<T>) tag).getValue());
+        }
+    }
+
+    public Number getAsNumber(String key) {
+        return getAsNumber(key, 0);
+    }
+
+    public Number getAsNumber(String key, Number defaultValue) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof NumberTag) {
+            return ((NumberTag<? extends Number>) tag).getValue();
+        }
+        return defaultValue;
+    }
+
+    public void listenForNumber(String key, NumberConsumer consumer) {
+        Tag tag = this.value.get(key);
+        if (tag instanceof NumberTag) {
+            consumer.accept(((NumberTag<? extends Number>) tag).getValue());
         }
     }
 

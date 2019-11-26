@@ -2,7 +2,7 @@ package com.nukkitx.nbt.tag;
 
 import java.util.Objects;
 
-public class LongTag extends Tag<Long> {
+public class LongTag extends NumberTag<Long> {
     private final long value;
 
     public LongTag(String name, long value) {

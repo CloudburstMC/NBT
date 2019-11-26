@@ -2,7 +2,7 @@ package com.nukkitx.nbt.tag;
 
 import java.util.Objects;
 
-public class IntTag extends Tag<Integer> {
+public class IntTag extends NumberTag<Integer> {
     private final int value;
 
     public IntTag(String name, Integer value) {
