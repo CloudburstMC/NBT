@@ -76,13 +76,13 @@ public class CompoundTagBuilder {
     }
 
     public CompoundTag buildRootTag() {
+        if (tagMap.isEmpty()) {
+            return CompoundTag.EMPTY;
+        }
         return new CompoundTag("", tagMap);
     }
 
     public CompoundTag build(String tagName) {
-        if (tagMap.isEmpty()) {
-            return CompoundTag.EMPTY;
-        }
         return new CompoundTag(tagName, tagMap);
     }
 }

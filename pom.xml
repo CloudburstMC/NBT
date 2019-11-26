@@ -6,7 +6,7 @@
 
     <groupId>com.nukkitx</groupId>
     <artifactId>nbt</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
     <name>NukkitX NBT</name>
 
     <distributionManagement>
