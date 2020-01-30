@@ -71,8 +71,13 @@ public class CompoundTagBuilder {
         return tag(new StringTag(name, value));
     }
 
-    public <T extends Tag> CompoundTagBuilder listTag(String name, Class<T> tagClass, List<T> values) {
+    public <T extends Tag<?>> CompoundTagBuilder listTag(String name, Class<T> tagClass, List<T> values) {
         return tag(new ListTag<>(name, tagClass, values));
+    }
+
+    public CompoundTagBuilder remove(String name) {
+        this.tagMap.remove(name);
+        return this;
     }
 
     public CompoundTag buildRootTag() {

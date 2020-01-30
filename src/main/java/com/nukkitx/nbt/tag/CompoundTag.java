@@ -348,7 +348,7 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("TAG_Compound").append(super.toString()).append(value.size()).append(" entries\r\n(\r\n");
-        for (Tag entry : value.values()) {
+        for (Tag<?> entry : value.values()) {
             builder.append("   ").append(entry.toString().replaceAll("\r\n", "\r\n   ")).append("\r\n");
         }
         builder.append(")");
