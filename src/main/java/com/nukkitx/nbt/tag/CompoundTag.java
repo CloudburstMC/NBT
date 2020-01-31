@@ -62,12 +62,12 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
         return (T) this.value.get(key);
     }
 
-    public boolean getAsBoolean(String key) {
-        return this.getAsBoolean(key, false);
+    public boolean getBoolean(String key) {
+        return this.getBoolean(key, false);
     }
 
-    public boolean getAsBoolean(String key, boolean defaultValue) {
-        Tag tag = this.value.get(key);
+    public boolean getBoolean(String key, boolean defaultValue) {
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof ByteTag) {
             return ((ByteTag) tag).getAsBoolean();
         }
@@ -75,18 +75,18 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     }
 
     public void listenForBoolean(String key, BooleanConsumer consumer) {
-        Tag tag = this.value.get(key);
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof ByteTag) {
             consumer.accept(((ByteTag) tag).getAsBoolean());
         }
     }
 
-    public byte getAsByte(String key) {
-        return this.getAsByte(key, (byte) 0);
+    public byte getByte(String key) {
+        return this.getByte(key, (byte) 0);
     }
 
-    public byte getAsByte(String key, byte defaultValue) {
-        Tag tag = this.value.get(key);
+    public byte getByte(String key, byte defaultValue) {
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof ByteTag) {
             return ((ByteTag) tag).getPrimitiveValue();
         }
@@ -94,18 +94,18 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     }
 
     public void listenForByte(String key, ByteConsumer consumer) {
-        Tag tag = this.value.get(key);
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof ByteTag) {
             consumer.accept(((ByteTag) tag).getPrimitiveValue());
         }
     }
 
-    public short getAsShort(String key) {
-        return this.getAsShort(key, (short) 0);
+    public short getShort(String key) {
+        return this.getShort(key, (short) 0);
     }
 
-    public short getAsShort(String key, short defaultValue) {
-        Tag tag = this.value.get(key);
+    public short getShort(String key, short defaultValue) {
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof ShortTag) {
             return ((ShortTag) tag).getPrimitiveValue();
         }
@@ -113,18 +113,18 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     }
 
     public void listenForShort(String key, ShortConsumer consumer) {
-        Tag tag = this.value.get(key);
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof ShortTag) {
             consumer.accept(((ShortTag) tag).getPrimitiveValue());
         }
     }
 
-    public int getAsInt(String key) {
-        return this.getAsInt(key, 0);
+    public int getInt(String key) {
+        return this.getInt(key, 0);
     }
 
-    public int getAsInt(String key, int defaultValue) {
-        Tag tag = this.value.get(key);
+    public int getInt(String key, int defaultValue) {
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof IntTag) {
             return ((IntTag) tag).getPrimitiveValue();
         }
@@ -132,18 +132,18 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     }
 
     public void listenForInt(String key, IntConsumer consumer) {
-        Tag tag = this.value.get(key);
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof IntTag) {
             consumer.accept(((IntTag) tag).getPrimitiveValue());
         }
     }
 
-    public long getAsLong(String key) {
-        return this.getAsLong(key, 0L);
+    public long getLong(String key) {
+        return this.getLong(key, 0L);
     }
 
-    public long getAsLong(String key, long defaultValue) {
-        Tag tag = this.value.get(key);
+    public long getLong(String key, long defaultValue) {
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof LongTag) {
             return ((LongTag) tag).getPrimitiveValue();
         }
@@ -151,18 +151,18 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     }
 
     public void listenForLong(String key, LongConsumer consumer) {
-        Tag tag = this.value.get(key);
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof LongTag) {
             consumer.accept(((LongTag) tag).getPrimitiveValue());
         }
     }
 
-    public float getAsFloat(String key) {
-        return this.getAsFloat(key, 0F);
+    public float getFloat(String key) {
+        return this.getFloat(key, 0F);
     }
 
-    public float getAsFloat(String key, float defaultValue) {
-        Tag tag = this.value.get(key);
+    public float getFloat(String key, float defaultValue) {
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof FloatTag) {
             return ((FloatTag) tag).getPrimitiveValue();
         }
@@ -170,18 +170,18 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     }
 
     public void listenForFloat(String key, FloatConsumer consumer) {
-        Tag tag = this.value.get(key);
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof FloatTag) {
             consumer.accept(((FloatTag) tag).getPrimitiveValue());
         }
     }
 
-    public double getAsDouble(String key) {
-        return this.getAsDouble(key, 0D);
+    public double getDouble(String key) {
+        return this.getDouble(key, 0D);
     }
 
-    public double getAsDouble(String key, double defaultValue) {
-        Tag tag = this.value.get(key);
+    public double getDouble(String key, double defaultValue) {
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof DoubleTag) {
             return ((DoubleTag) tag).getPrimitiveValue();
         }
@@ -189,18 +189,18 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     }
 
     public void listenForDouble(String key, DoubleConsumer consumer) {
-        Tag tag = this.value.get(key);
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof DoubleTag) {
             consumer.accept(((DoubleTag) tag).getPrimitiveValue());
         }
     }
 
-    public String getAsString(String key) {
-        return this.getAsString(key, "");
+    public String getString(String key) {
+        return this.getString(key, "");
     }
 
-    public String getAsString(String key, @Nullable String defaultValue) {
-        Tag tag = this.value.get(key);
+    public String getString(String key, @Nullable String defaultValue) {
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof StringTag) {
             return ((StringTag) tag).getValue();
         }
@@ -208,18 +208,18 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     }
 
     public void listenForString(String key, Consumer<String> consumer) {
-        Tag tag = this.value.get(key);
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof StringTag) {
             consumer.accept(((StringTag) tag).getValue());
         }
     }
 
-    public byte[] getAsByteArray(String key) {
-        return this.getAsByteArray(key, EMPTY_BYTE_ARRAY);
+    public byte[] getByteArray(String key) {
+        return this.getByteArray(key, EMPTY_BYTE_ARRAY);
     }
 
-    public byte[] getAsByteArray(String key, @Nullable byte[] defaultValue) {
-        Tag tag = this.value.get(key);
+    public byte[] getByteArray(String key, @Nullable byte[] defaultValue) {
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof ByteArrayTag) {
             return ((ByteArrayTag) tag).getValue();
         }
@@ -227,18 +227,18 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     }
 
     public void listenForByteArray(String key, Consumer<byte[]> consumer) {
-        Tag tag = this.value.get(key);
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof ByteArrayTag) {
             consumer.accept(((ByteArrayTag) tag).getValue());
         }
     }
 
-    public int[] getAsIntArray(String key) {
-        return this.getAsIntArray(key, EMPTY_INT_ARRAY);
+    public int[] getIntArray(String key) {
+        return this.getIntArray(key, EMPTY_INT_ARRAY);
     }
 
-    public int[] getAsIntArray(String key, @Nullable int[] defaultValue) {
-        Tag tag = this.value.get(key);
+    public int[] getIntArray(String key, @Nullable int[] defaultValue) {
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof IntArrayTag) {
             return ((IntArrayTag) tag).getValue();
         }
@@ -246,18 +246,18 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     }
 
     public void listenForIntArray(String key, Consumer<int[]> consumer) {
-        Tag tag = this.value.get(key);
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof IntArrayTag) {
             consumer.accept(((IntArrayTag) tag).getValue());
         }
     }
 
-    public long[] getAsLongArray(String key) {
-        return this.getAsLongArray(key, EMPTY_LONG_ARRAY);
+    public long[] getLongArray(String key) {
+        return this.getLongArray(key, EMPTY_LONG_ARRAY);
     }
 
-    public long[] getAsLongArray(String key, @Nullable long[] defaultValue) {
-        Tag tag = this.value.get(key);
+    public long[] getLongArray(String key, @Nullable long[] defaultValue) {
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof LongArrayTag) {
             return ((LongArrayTag) tag).getValue();
         }
@@ -265,18 +265,18 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     }
 
     public void listenForLongArray(String key, Consumer<long[]> consumer) {
-        Tag tag = this.value.get(key);
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof LongArrayTag) {
             consumer.accept(((LongArrayTag) tag).getValue());
         }
     }
 
-    public CompoundTag getAsCompound(String key) {
-        return this.getAsCompound(key, EMPTY);
+    public CompoundTag getCompound(String key) {
+        return this.getCompound(key, EMPTY);
     }
 
-    public CompoundTag getAsCompound(String key, @Nullable CompoundTag defaultValue) {
-        Tag tag = this.value.get(key);
+    public CompoundTag getCompound(String key, @Nullable CompoundTag defaultValue) {
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof CompoundTag) {
             return (CompoundTag) tag;
         }
@@ -284,19 +284,19 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     }
 
     public void listenForCompound(String key, Consumer<CompoundTag> consumer) {
-        Tag tag = this.value.get(key);
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof CompoundTag) {
             consumer.accept((CompoundTag) tag);
         }
     }
 
-    public <T extends Tag<?>> List<T> getAsList(String key, Class<T> tagClass) {
-        return this.getAsList(key, tagClass, Collections.emptyList());
+    public <T extends Tag<?>> List<T> getList(String key, Class<T> tagClass) {
+        return this.getList(key, tagClass, Collections.emptyList());
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Tag<?>> List<T> getAsList(String key, Class<T> tagClass, @Nullable List<T> defaultValue) {
-        Tag tag = this.value.get(key);
+    public <T extends Tag<?>> List<T> getList(String key, Class<T> tagClass, @Nullable List<T> defaultValue) {
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof ListTag && tagClass.isAssignableFrom(((ListTag) tag).getTagClass())) {
             return ((ListTag<T>) tag).getValue();
         }
@@ -305,18 +305,18 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
 
     @SuppressWarnings("unchecked")
     public <T extends Tag<?>> void listenForList(String key, Class<T> tagClass, Consumer<List<T>> consumer) {
-        Tag tag = this.value.get(key);
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof ListTag && tagClass.isAssignableFrom(((ListTag) tag).getTagClass())) {
             consumer.accept(((ListTag<T>) tag).getValue());
         }
     }
 
-    public Number getAsNumber(String key) {
-        return getAsNumber(key, 0);
+    public Number getNumber(String key) {
+        return getNumber(key, 0);
     }
 
-    public Number getAsNumber(String key, Number defaultValue) {
-        Tag tag = this.value.get(key);
+    public Number getNumber(String key, Number defaultValue) {
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof NumberTag) {
             return ((NumberTag<? extends Number>) tag).getValue();
         }
@@ -324,7 +324,7 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     }
 
     public void listenForNumber(String key, NumberConsumer consumer) {
-        Tag tag = this.value.get(key);
+        Tag<?> tag = this.value.get(key);
         if (tag instanceof NumberTag) {
             consumer.accept(((NumberTag<? extends Number>) tag).getValue());
         }

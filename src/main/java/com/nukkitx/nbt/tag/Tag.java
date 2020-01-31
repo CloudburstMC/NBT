@@ -16,7 +16,7 @@ public abstract class Tag<T> implements Comparable<Tag<T>> {
     }
 
     @Override
-    public int compareTo(@Nonnull Tag other) {
+    public int compareTo(@Nonnull Tag<T> other) {
         if (equals(other)) {
             return 0;
         } else {
