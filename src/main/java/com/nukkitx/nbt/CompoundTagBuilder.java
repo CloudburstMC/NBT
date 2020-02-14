@@ -22,6 +22,11 @@ public class CompoundTagBuilder {
         return builder;
     }
 
+    public CompoundTagBuilder putAll(CompoundTag tag) {
+        this.tagMap.putAll(tag.getValue());
+        return this;
+    }
+
     public CompoundTagBuilder tag(Tag<?> tag) {
         tagMap.put(tag.getName(), tag);
         return this;

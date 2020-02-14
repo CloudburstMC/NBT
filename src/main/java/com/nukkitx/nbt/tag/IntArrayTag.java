@@ -32,6 +32,6 @@ public class IntArrayTag extends Tag<int[]> {
 
     @Override
     public String toString() {
-        return "TAG_Int_Array" + super.toString() + "[" + value.length + " values]";
+        return "TAG_Int_Array" + super.toString() + Arrays.toString(value);
     }
 }
