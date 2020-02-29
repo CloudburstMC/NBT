@@ -8,6 +8,15 @@
     <artifactId>nbt</artifactId>
     <version>1.5.1</version>
     <name>NukkitX NBT</name>
+    <description>NBT library with support for Minecraft: Bedrock Edition</description>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <distributionManagement>
         <repository>
