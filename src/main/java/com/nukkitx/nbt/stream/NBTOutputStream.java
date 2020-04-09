@@ -34,7 +34,7 @@ public class NBTOutputStream implements Closeable {
 
         if (!skipHeader) {
             output.writeByte(type.ordinal() & 0xFF);
-            output.writeUTF(tag.getName());
+            output.writeUTF(tag.getName() == null ? "" : tag.getName());
         }
 
         switch (type) {

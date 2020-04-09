@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class ListTag<T extends Tag> extends Tag<List<T>> {
+public class ListTag<T extends Tag<T>> extends Tag<List<T>> {
     private final Class<T> tagClass;
     private final List<T> value;
 
@@ -45,7 +45,7 @@ public class ListTag<T extends Tag> extends Tag<List<T>> {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("TAG_List").append(super.toString()).append(value.size()).append(" entries of type ").append(TagType.byClass(tagClass).getTypeName()).append("\r\n{\r\n");
-        for (Tag tag : value) {
+        for (Tag<T> tag : value) {
             builder.append("   ").append(tag.toString().replaceAll("\r\n", "\r\n   ")).append("\r\n");
         }
         builder.append("}");
