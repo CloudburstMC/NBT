@@ -20,6 +20,11 @@ public class ShortTag extends NumberTag<Short> {
     }
 
     @Override
+    public ShortTag rename(String newName) {
+        return new ShortTag(newName, value);
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(getName(), value);
     }

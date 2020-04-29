@@ -20,6 +20,11 @@ public class LongTag extends NumberTag<Long> {
     }
 
     @Override
+    public LongTag rename(String newName) {
+        return new LongTag(newName, value);
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(getName(), value);
     }

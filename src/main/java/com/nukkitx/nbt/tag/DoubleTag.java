@@ -20,6 +20,11 @@ public class DoubleTag extends NumberTag<Double> {
     }
 
     @Override
+    public DoubleTag rename(String newName) {
+        return new DoubleTag(newName, value);
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(getName(), value);
     }

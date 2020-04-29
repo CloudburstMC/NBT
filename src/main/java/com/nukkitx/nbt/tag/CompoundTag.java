@@ -28,6 +28,11 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
         this.value = Collections.unmodifiableMap(new HashMap<>(Objects.requireNonNull(value, "value")));
     }
 
+    private CompoundTag(Map<String, Tag<?>> value, String name) {
+        super(name);
+        this.value = value;
+    }
+
     public static CompoundTagBuilder builder() {
         return CompoundTagBuilder.builder();
     }
@@ -46,6 +51,11 @@ public class CompoundTag extends Tag<Map<String, Tag<?>>> {
     @Override
     public Map<String, Tag<?>> getValue() {
         return value;
+    }
+
+    @Override
+    public CompoundTag rename(String newName) {
+        return new CompoundTag(value, newName);
     }
 
     public CompoundTagBuilder toBuilder() {

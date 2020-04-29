@@ -16,6 +16,11 @@ public class StringTag extends Tag<String> {
     }
 
     @Override
+    public StringTag rename(String newName) {
+        return new StringTag(newName, value);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

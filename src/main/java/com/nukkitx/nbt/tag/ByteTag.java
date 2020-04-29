@@ -28,6 +28,11 @@ public class ByteTag extends NumberTag<Byte> {
     }
 
     @Override
+    public ByteTag rename(String newName) {
+        return new ByteTag(newName, value);
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(getName(), value);
     }

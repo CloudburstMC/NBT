@@ -13,6 +13,11 @@ public class EndTag extends Tag<Void> {
     }
 
     @Override
+    public EndTag rename(String newName) {
+        return INSTANCE;
+    }
+
+    @Override
     public Void getValue() {
         return null;
     }

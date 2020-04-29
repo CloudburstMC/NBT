@@ -17,6 +17,11 @@ public class LongArrayTag extends Tag<long[]> {
     }
 
     @Override
+    public LongArrayTag rename(String newName) {
+        return new LongArrayTag(newName, value);
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(getName(), value);
     }

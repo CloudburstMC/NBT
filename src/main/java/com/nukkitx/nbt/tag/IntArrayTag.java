@@ -17,6 +17,11 @@ public class IntArrayTag extends Tag<int[]> {
     }
 
     @Override
+    public IntArrayTag rename(String newName) {
+        return new IntArrayTag(newName, value);
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(getName(), value);
     }

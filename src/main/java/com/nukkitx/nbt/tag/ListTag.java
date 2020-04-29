@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class ListTag<T extends Tag> extends Tag<List<T>> {
+public class ListTag<T extends Tag<?>> extends Tag<List<T>> {
     private final Class<T> tagClass;
     private final List<T> value;
 
@@ -24,6 +24,11 @@ public class ListTag<T extends Tag> extends Tag<List<T>> {
     @Override
     public List<T> getValue() {
         return value;
+    }
+
+    @Override
+    public ListTag<T> rename(String newName) {
+        return new ListTag<>(newName, tagClass, value);
     }
 
     @Override

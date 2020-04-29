@@ -20,6 +20,11 @@ public class FloatTag extends NumberTag<Float> {
     }
 
     @Override
+    public FloatTag rename(String newName) {
+        return new FloatTag(newName, value);
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(getName(), value);
     }

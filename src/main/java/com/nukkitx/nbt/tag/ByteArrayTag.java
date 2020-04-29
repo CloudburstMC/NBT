@@ -17,6 +17,11 @@ public class ByteArrayTag extends Tag<byte[]> {
     }
 
     @Override
+    public ByteArrayTag rename(String newName) {
+        return new ByteArrayTag(newName, value);
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(getName(), value);
     }
