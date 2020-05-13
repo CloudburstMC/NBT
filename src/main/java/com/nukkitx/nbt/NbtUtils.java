@@ -73,13 +73,13 @@ public class NbtUtils {
         } else if (o instanceof int[]) {
             StringJoiner joiner = new StringJoiner(", ");
             for (int i : (int[]) o) {
-                joiner.add(i + "I");
+                joiner.add(i + "i");
             }
             return "[ " + joiner + " ]";
         } else if (o instanceof long[]) {
             StringJoiner joiner = new StringJoiner(", ");
             for (long l : (long[]) o) {
-                joiner.add(l + "L");
+                joiner.add(l + "l");
             }
             return "[ " + joiner + " ]";
         }
