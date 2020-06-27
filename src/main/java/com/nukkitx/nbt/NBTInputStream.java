@@ -1,14 +1,10 @@
-package com.nukkitx.nbt.stream;
-
-import com.nukkitx.nbt.NbtList;
-import com.nukkitx.nbt.NbtMap;
-import com.nukkitx.nbt.NbtMapBuilder;
-import com.nukkitx.nbt.NbtType;
+package com.nukkitx.nbt;
 
 import java.io.Closeable;
 import java.io.DataInput;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -66,13 +62,13 @@ public class NBTInputStream implements Closeable {
             case STRING:
                 return input.readUTF();
             case COMPOUND:
-                NbtMapBuilder builder = NbtMap.builder();
+                LinkedHashMap<String, Object> map = new LinkedHashMap<>();
                 NbtType<?> nbtType;
                 while ((nbtType = NbtType.byId(input.readUnsignedByte())) != NbtType.END) {
                     String name = input.readUTF();
-                    builder.put(name, deserialize(nbtType, maxDepth - 1));
+                    map.put(name, deserialize(nbtType, maxDepth - 1));
                 }
-                return builder.build();
+                return new NbtMap(map);
             case LIST:
                 int typeId = input.readUnsignedByte();
                 NbtType<?> listType = NbtType.byId(typeId);

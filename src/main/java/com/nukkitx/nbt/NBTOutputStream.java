@@ -1,8 +1,4 @@
-package com.nukkitx.nbt.stream;
-
-import com.nukkitx.nbt.NbtList;
-import com.nukkitx.nbt.NbtMap;
-import com.nukkitx.nbt.NbtType;
+package com.nukkitx.nbt;
 
 import java.io.Closeable;
 import java.io.DataOutput;

@@ -1,6 +1,5 @@
 package com.nukkitx.nbt;
 
-import com.nukkitx.nbt.stream.NBTInputStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.*;

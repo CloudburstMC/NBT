@@ -1,6 +1,9 @@
 package com.nukkitx.nbt;
 
-import com.nukkitx.nbt.stream.*;
+import com.nukkitx.nbt.util.stream.LittleEndianDataInputStream;
+import com.nukkitx.nbt.util.stream.LittleEndianDataOutputStream;
+import com.nukkitx.nbt.util.stream.NetworkDataInputStream;
+import com.nukkitx.nbt.util.stream.NetworkDataOutputStream;
 
 import java.io.*;
 import java.util.Arrays;

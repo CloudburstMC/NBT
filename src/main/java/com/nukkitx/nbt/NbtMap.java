@@ -35,6 +35,10 @@ public class NbtMap extends AbstractMap<String, Object> {
         this.map = new LinkedHashMap<>(map);
     }
 
+    NbtMap(LinkedHashMap<String, Object> map) {
+        this.map = map;
+    }
+
     public static NbtMapBuilder builder() {
         return new NbtMapBuilder();
     }

@@ -2,6 +2,7 @@ package com.nukkitx.nbt;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
@@ -107,7 +108,7 @@ public class NbtMapBuilder extends LinkedHashMap<String, Object> {
         if (this.isEmpty()) {
             return NbtMap.EMPTY;
         }
-        return new NbtMap(this);
+        return new NbtMap((Map<String, Object>) this);
     }
 
     @Override
