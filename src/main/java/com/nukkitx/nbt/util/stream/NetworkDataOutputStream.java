@@ -1,4 +1,4 @@
-package com.nukkitx.nbt.stream;
+package com.nukkitx.nbt.util.stream;
 
 import com.nukkitx.nbt.util.VarInts;
 

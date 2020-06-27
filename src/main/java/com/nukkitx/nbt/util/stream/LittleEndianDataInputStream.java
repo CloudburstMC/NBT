@@ -1,4 +1,4 @@
-package com.nukkitx.nbt.stream;
+package com.nukkitx.nbt.util.stream;
 
 import javax.annotation.Nonnull;
 import java.io.*;
