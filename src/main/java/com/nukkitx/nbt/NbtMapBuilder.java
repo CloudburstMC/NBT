@@ -20,6 +20,11 @@ public class NbtMapBuilder extends LinkedHashMap<String, Object> {
     @Override
     public Object put(String key, Object value) {
         requireNonNull(value, "value");
+
+        if (value instanceof Boolean) {
+            value = (byte) ((boolean) value ? 1 : 0);
+        }
+
         NbtType.byClass(value.getClass()); // Make sure value is valid
         return super.put(key, NbtUtils.copy(value));
     }
