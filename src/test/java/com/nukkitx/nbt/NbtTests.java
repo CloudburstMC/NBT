@@ -21,6 +21,8 @@ class NbtTests {
     private static final long[] TEST_LONGS;
     private static final NbtMap[] TEST_LIST = new NbtMap[16];
 
+    private static final NbtMap TEST_MAP;
+
     static {
         TEST_BYTES = RANDOM.generateSeed(32);
         TEST_INTS = RANDOM.ints(32).toArray();
@@ -33,25 +35,27 @@ class NbtTests {
                     .putByteArray("ListByteArray", RANDOM.generateSeed(16))
                     .build();
         }
-    }
 
-    private static final NbtMap TEST_MAP = NbtMap.builder()
-            .putBoolean("BooleanTest", true)
-            .putByte("ByteTest", (byte) RANDOM.nextInt())
-            .putShort("ShortTest", (short) RANDOM.nextInt())
-            .putInt("IntTest", RANDOM.nextInt())
-            .putLong("LongTest", RANDOM.nextLong())
-            .putFloat("FloatTest", RANDOM.nextFloat())
-            .putDouble("DoubleTest", RANDOM.nextDouble())
-            .putByteArray("ByteArrayTest", TEST_BYTES)
-            .putIntArray("IntArrayTest", TEST_INTS)
-            .putLongArray("LongArrayTest", TEST_LONGS)
-            .putString("StringTest", new String(RANDOM.generateSeed(32), StandardCharsets.UTF_8))
-            .putCompound("CompoundTest", NbtMap.builder()
-                    .putString("CompoundStringTest", "Test value 123")
-                    .build())
-            .putList("ListTest", NbtType.COMPOUND, TEST_LIST)
-            .build();
+        NbtMapBuilder builder = NbtMap.builder()
+                .putBoolean("BooleanTest", true)
+                .putByte("ByteTest", (byte) RANDOM.nextInt())
+                .putShort("ShortTest", (short) RANDOM.nextInt())
+                .putInt("IntTest", RANDOM.nextInt())
+                .putLong("LongTest", RANDOM.nextLong())
+                .putFloat("FloatTest", RANDOM.nextFloat())
+                .putDouble("DoubleTest", RANDOM.nextDouble())
+                .putByteArray("ByteArrayTest", TEST_BYTES)
+                .putIntArray("IntArrayTest", TEST_INTS)
+                .putLongArray("LongArrayTest", TEST_LONGS)
+                .putString("StringTest", new String(RANDOM.generateSeed(32), StandardCharsets.UTF_8))
+                .putCompound("CompoundTest", NbtMap.builder()
+                        .putString("CompoundStringTest", "Test value 123")
+                        .build())
+                .putList("ListTest", NbtType.COMPOUND, TEST_LIST);
+
+        builder.put("BooleanTest2", RANDOM.nextBoolean());
+        TEST_MAP = builder.build();
+    }
 
     @Test
     @DisplayName("Network Encoding Test")
