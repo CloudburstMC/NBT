@@ -10,6 +10,8 @@ public class NbtList<E> extends AbstractList<E> {
 
     private final NbtType<E> type;
     private final E[] array;
+    private transient boolean hashCodeGenerated;
+    private transient int hashCode;
 
     @SuppressWarnings("unchecked")
     public NbtList(NbtType<E> type, Collection<E> collection) {
@@ -61,8 +63,11 @@ public class NbtList<E> extends AbstractList<E> {
 
     @Override
     public int hashCode() {
+        if (this.hashCodeGenerated) return this.hashCode;
         int result = Objects.hash(super.hashCode(), type);
         result = 31 * result + Arrays.deepHashCode(array);
+        this.hashCode = result;
+        this.hashCodeGenerated = true;
         return result;
     }
 

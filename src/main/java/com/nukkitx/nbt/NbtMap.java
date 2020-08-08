@@ -26,6 +26,8 @@ public class NbtMap extends AbstractMap<String, Object> {
     private transient Set<String> keySet;
     private transient Set<Map.Entry<String, Object>> entrySet;
     private transient Collection<Object> values;
+    private transient boolean hashCodeGenerated;
+    private transient int hashCode;
 
     private NbtMap() {
         this.map = new LinkedHashMap<>();
@@ -381,9 +383,13 @@ public class NbtMap extends AbstractMap<String, Object> {
 
     @Override
     public int hashCode() {
+        if (this.hashCodeGenerated)
+            return this.hashCode;
         int h = 0;
         for (Entry<String, Object> stringObjectEntry : this.map.entrySet())
             h += stringObjectEntry.hashCode();
+        this.hashCode = h;
+        this.hashCodeGenerated = true;
         return h;
     }
 
@@ -411,4 +417,6 @@ public class NbtMap extends AbstractMap<String, Object> {
             sb.append(',').append('\n');
         }
     }
+
+
 }
