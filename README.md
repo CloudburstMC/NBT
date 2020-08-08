@@ -14,7 +14,7 @@ An Named Binary Tag library built including VarInt support introduced by Minecra
         <dependency>
             <groupId>com.nukkitx</groupId>
             <artifactId>nbt</artifactId>
-            <version>1.3.2</version>
+            <version>2.0.2</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
