@@ -19,23 +19,39 @@ public class NbtUtils {
     private NbtUtils() {
     }
 
-    public static NBTInputStream createReader(InputStream stream) {
+    public static NBTInputStream createReader(InputStream stream, boolean internKeys, boolean internStringValues) {
         requireNonNull(stream, "stream");
-        return new NBTInputStream(new DataInputStream(stream));
+        return new NBTInputStream(new DataInputStream(stream), internKeys, internStringValues);
+    }
+
+    public static NBTInputStream createReaderLE(InputStream stream, boolean internKeys, boolean internStringValues) {
+        requireNonNull(stream, "stream");
+        return new NBTInputStream(new LittleEndianDataInputStream(stream), internKeys, internStringValues);
+    }
+
+    public static NBTInputStream createGZIPReader(InputStream stream, boolean internKeys, boolean internStringValues) throws IOException {
+        return createReader(new GZIPInputStream(stream), internKeys, internStringValues);
+    }
+
+    public static NBTInputStream createNetworkReader(InputStream stream, boolean internKeys, boolean internStringValues) {
+        requireNonNull(stream, "stream");
+        return new NBTInputStream(new NetworkDataInputStream(stream), internKeys, internStringValues);
+    }
+
+    public static NBTInputStream createReader(InputStream stream) {
+        return createReader(stream, false, false);
     }
 
     public static NBTInputStream createReaderLE(InputStream stream) {
-        requireNonNull(stream, "stream");
-        return new NBTInputStream(new LittleEndianDataInputStream(stream));
+        return createReaderLE(stream, false, false);
     }
 
     public static NBTInputStream createGZIPReader(InputStream stream) throws IOException {
-        return createReader(new GZIPInputStream(stream));
+        return createGZIPReader(stream, false, false);
     }
 
     public static NBTInputStream createNetworkReader(InputStream stream) {
-        requireNonNull(stream, "stream");
-        return new NBTInputStream(new NetworkDataInputStream(stream));
+        return createNetworkReader(stream, false, false);
     }
 
     public static NBTOutputStream createWriter(OutputStream stream) {
