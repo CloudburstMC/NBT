@@ -19,23 +19,23 @@ public class NbtUtils {
     private NbtUtils() {
     }
 
-    public static NBTInputStream createReader(InputStream stream, boolean internKeys, boolean internStringValues) {
+    public static NBTInputStream createReader(InputStream stream, boolean internKeys, boolean internValues) {
         requireNonNull(stream, "stream");
-        return new NBTInputStream(new DataInputStream(stream), internKeys, internStringValues);
+        return new NBTInputStream(new DataInputStream(stream), internKeys, internValues);
     }
 
-    public static NBTInputStream createReaderLE(InputStream stream, boolean internKeys, boolean internStringValues) {
+    public static NBTInputStream createReaderLE(InputStream stream, boolean internKeys, boolean internValues) {
         requireNonNull(stream, "stream");
-        return new NBTInputStream(new LittleEndianDataInputStream(stream), internKeys, internStringValues);
+        return new NBTInputStream(new LittleEndianDataInputStream(stream), internKeys, internValues);
     }
 
-    public static NBTInputStream createGZIPReader(InputStream stream, boolean internKeys, boolean internStringValues) throws IOException {
-        return createReader(new GZIPInputStream(stream), internKeys, internStringValues);
+    public static NBTInputStream createGZIPReader(InputStream stream, boolean internKeys, boolean internValues) throws IOException {
+        return createReader(new GZIPInputStream(stream), internKeys, internValues);
     }
 
-    public static NBTInputStream createNetworkReader(InputStream stream, boolean internKeys, boolean internStringValues) {
+    public static NBTInputStream createNetworkReader(InputStream stream, boolean internKeys, boolean internValues) {
         requireNonNull(stream, "stream");
-        return new NBTInputStream(new NetworkDataInputStream(stream), internKeys, internStringValues);
+        return new NBTInputStream(new NetworkDataInputStream(stream), internKeys, internValues);
     }
 
     public static NBTInputStream createReader(InputStream stream) {
