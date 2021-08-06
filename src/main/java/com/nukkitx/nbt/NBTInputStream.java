@@ -12,10 +12,18 @@ import static com.nukkitx.nbt.NbtUtils.MAX_DEPTH;
 
 public class NBTInputStream implements Closeable {
     private final DataInput input;
+    private final boolean internKeys;
+    private final boolean internValues;
     private boolean closed = false;
 
-    public NBTInputStream(DataInput input) {
+    public NBTInputStream(DataInput input, boolean internKeys, boolean internValues) {
         this.input = Objects.requireNonNull(input, "input");
+        this.internKeys = internKeys;
+        this.internValues = internValues;
+    }
+
+    public NBTInputStream(DataInput input) {
+        this(input, false, false);
     }
 
     public Object readTag() throws IOException {
@@ -47,11 +55,19 @@ public class NBTInputStream implements Closeable {
             case SHORT:
                 return input.readShort();
             case INT:
-                return input.readInt();
+                if (this.internValues) {
+                    return IntegerInternPool.intern(input.readInt());
+                } else {
+                    return input.readInt();
+                }
             case LONG:
                 return input.readLong();
             case FLOAT:
-                return input.readFloat();
+                if (this.internValues) {
+                    return FloatInternPool.intern(input.readFloat());
+                } else {
+                    return input.readFloat();
+                }
             case DOUBLE:
                 return input.readDouble();
             case BYTE_ARRAY:
@@ -60,12 +76,21 @@ public class NBTInputStream implements Closeable {
                 input.readFully(bytes);
                 return bytes;
             case STRING:
-                return input.readUTF();
+                if (this.internValues) {
+                    return input.readUTF().intern();
+                } else {
+                    return input.readUTF();
+                }
             case COMPOUND:
                 LinkedHashMap<String, Object> map = new LinkedHashMap<>();
                 NbtType<?> nbtType;
                 while ((nbtType = NbtType.byId(input.readUnsignedByte())) != NbtType.END) {
-                    String name = input.readUTF();
+                    String name;
+                    if (this.internKeys) {
+                        name = input.readUTF().intern();
+                    } else {
+                        name = input.readUTF();
+                    }
                     map.put(name, deserialize(nbtType, maxDepth - 1));
                 }
                 return new NbtMap(map);
