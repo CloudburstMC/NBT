@@ -27,19 +27,32 @@ public class NBTOutputStream implements Closeable {
             throw new IllegalStateException("closed");
         }
 
-        NbtType<?> type = NbtType.byClass(tag.getClass());
+        NbtType<?> type = byClass(tag.getClass());
 
         output.writeByte(type.getId());
         output.writeUTF("");
 
-        this.serialize(tag, maxDepth);
+        this.serialize(tag, type, maxDepth);
     }
 
-    private void serialize(Object tag, int maxDepth) throws IOException {
+    public void writeValue(Object tag) throws IOException {
+        this.writeValue(tag, MAX_DEPTH);
+    }
+
+    public void writeValue(Object tag, int maxDepth) throws IOException {
+        Objects.requireNonNull(tag, "tag");
+        if (closed) {
+            throw new IllegalStateException("closed");
+        }
+
+        NbtType<?> type = byClass(tag.getClass());
+        this.serialize(tag, type, maxDepth);
+    }
+
+    private void serialize(Object tag, NbtType<?> type, int maxDepth) throws IOException {
         if (maxDepth < 0) {
             throw new IllegalArgumentException("Reached depth limit");
         }
-        NbtType<?> type = byClass(tag.getClass());
 
         switch (type.getEnum()) {
             case END:
@@ -83,19 +96,19 @@ public class NBTOutputStream implements Closeable {
                 output.writeByte(listType.getId());
                 output.writeInt(list.size());
                 for (Object entry : list) {
-                    this.serialize(entry, maxDepth - 1);
+                    this.serialize(entry, listType, maxDepth - 1);
                 }
                 break;
             case COMPOUND:
                 NbtMap map = (NbtMap) tag;
 
                 for (Map.Entry<String, Object> entry : map.entrySet()) {
-                    NbtType<?> entryType = NbtType.byClass(entry.getValue().getClass());
+                    NbtType<?> entryType = byClass(entry.getValue().getClass());
 
                     output.writeByte(entryType.getId());
                     output.writeUTF(entry.getKey());
 
-                    this.serialize(entry.getValue(), maxDepth - 1);
+                    this.serialize(entry.getValue(), entryType, maxDepth - 1);
                 }
                 output.writeByte(0); // End tag
                 break;

@@ -41,6 +41,19 @@ public class NBTInputStream implements Closeable {
         return deserialize(type, maxDepth);
     }
 
+    public <T> T readValue(NbtType<T> type) throws IOException {
+        return readValue(type, MAX_DEPTH);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T readValue(NbtType<T> type, int maxDepth) throws IOException {
+        if (closed) {
+            throw new IllegalStateException("Trying to read from a closed reader!");
+        }
+
+        return (T) deserialize(type, maxDepth);
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     private Object deserialize(NbtType<?> type, int maxDepth) throws IOException {
         if (maxDepth < 0) {
