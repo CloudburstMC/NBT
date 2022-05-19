@@ -362,6 +362,11 @@ public class NbtMap extends AbstractMap<String, Object> {
         if (m.size() != size())
             return false;
 
+        if (this.hashCodeGenerated && o instanceof NbtMap && ((NbtMap) o).hashCodeGenerated &&
+                this.hashCode != ((NbtMap) o).hashCode) {
+            return false;
+        }
+
         try {
             for (Entry<String, Object> e : entrySet()) {
                 String key = e.getKey();
@@ -417,6 +422,4 @@ public class NbtMap extends AbstractMap<String, Object> {
             sb.append(',').append('\n');
         }
     }
-
-
 }
