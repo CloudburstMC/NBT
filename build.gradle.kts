@@ -62,6 +62,14 @@ publishing {
                         url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
                     }
                 }
+
+                developers {
+                    developer {
+                        name.set("CloudburstMC Team")
+                        organization.set("CloudburstMC")
+                        organizationUrl.set("https://github.com/CloudburstMC")
+                    }
+                }
             }
         }
     }
