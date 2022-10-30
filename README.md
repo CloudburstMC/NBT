@@ -2,20 +2,20 @@
 An Named Binary Tag library built including VarInt support introduced by Minecraft: Bedrock Edition in 0.16.0
 
 ### Dependency 
-```xml
-    <repositories>
-        <repository>
-            <id>nukkitx-repo</id>
-            <url>https://repo.nukkitx.com/maven-releases</url>
-        </repository>
-    </repositories>
 
+#### Maven
+```xml
     <dependencies>
         <dependency>
-            <groupId>com.nukkitx</groupId>
+            <groupId>org.cloudburstmc</groupId>
             <artifactId>nbt</artifactId>
-            <version>2.2.0</version>
+            <version>3.0.0.Final</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
+```
+
+#### Gradle (Kotlin DSL)
+```kt
+implementation("org.cloudburstmc:nbt:3.0.0.Final")
 ```
