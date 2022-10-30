@@ -15,11 +15,6 @@ jobs:
           java-version: '8'
           gpg-private-key: ${{ secrets.MAVEN_CENTRAL_SECRET }}
           gpg-passphrase: ${{ secrets.MAVEN_CENTRAL_PASSPHRASE }}
+      - uses: gradle/gradle-build-action@v2
       - name: Publish
-        env:
-          MAVEN_DEPLOY_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_DEPLOY_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          PGP_SECRET: ${{ secrets.MAVEN_CENTRAL_SECRET }}
-          PGP_PASSPHRASE: ${{ secrets.MAVEN_CENTRAL_PASSPHRASE }}
-        run: ./gradlew publish
-
+        run: gradle publish
