@@ -81,3 +81,17 @@ signing {
         sign(publishing.publications["maven"])
     }
 }
+
+tasks {
+    compileJava {
+        options.encoding = Charsets.UTF_8.name();
+    }
+    test {
+        useJUnitPlatform()
+    }
+    jar {
+        manifest {
+            attributes("Automatic-Module-Name" to "org.cloudburstmc.nbt")
+        }
+    }
+}
