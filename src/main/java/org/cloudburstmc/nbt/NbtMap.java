@@ -17,7 +17,7 @@ public class NbtMap extends AbstractMap<String, Object> {
     private static final int[] EMPTY_INT_ARRAY = new int[0];
     private static final long[] EMPTY_LONG_ARRAY = new long[0];
 
-    private final LinkedHashMap<String, Object> map;
+    private final Map<String, Object> map;
 
     private transient Set<String> keySet;
     private transient Set<Map.Entry<String, Object>> entrySet;
@@ -30,15 +30,15 @@ public class NbtMap extends AbstractMap<String, Object> {
     }
 
     NbtMap(Map<String, Object> map) {
-        this.map = new LinkedHashMap<>(map);
-    }
-
-    NbtMap(LinkedHashMap<String, Object> map) {
         this.map = map;
     }
 
     public static NbtMapBuilder builder() {
         return new NbtMapBuilder();
+    }
+
+    public static NbtMap fromMap(Map<String, Object> map) {
+        return new NbtMap(Collections.unmodifiableMap(map));
     }
 
     public NbtMapBuilder toBuilder() {

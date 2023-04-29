@@ -113,7 +113,7 @@ public class NbtMapBuilder extends LinkedHashMap<String, Object> {
         if (this.isEmpty()) {
             return NbtMap.EMPTY;
         }
-        return new NbtMap((Map<String, Object>) this);
+        return new NbtMap(new LinkedHashMap<>((Map<String, Object>) this));
     }
 
     @Override
