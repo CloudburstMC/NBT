@@ -1,101 +1,78 @@
 package org.cloudburstmc.nbt.util.stream;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.cloudburstmc.nbt.NbtUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class LittleEndianDataInputStream implements DataInput, Closeable {
-    protected final DataInputStream stream;
+public class LittleEndianDataInputStream extends LimitedDataInput {
 
     public LittleEndianDataInputStream(InputStream stream) {
-        this.stream = new DataInputStream(stream);
+        this(stream, NbtUtils.MAX_READ_SIZE);
+    }
+
+    public LittleEndianDataInputStream(InputStream stream, long maxReadSize) {
+        super(new DataInputStream(stream), maxReadSize);
     }
 
     public LittleEndianDataInputStream(DataInputStream stream) {
-        this.stream = stream;
+        this(stream, NbtUtils.MAX_READ_SIZE);
     }
 
-    @Override
-    public void close() throws IOException {
-        this.stream.close();
-    }
-
-    @Override
-    public void readFully(byte @NonNull [] bytes) throws IOException {
-        this.stream.readFully(bytes);
-    }
-
-    @Override
-    public void readFully(byte @NonNull [] bytes, int offset, int length) throws IOException {
-        this.stream.readFully(bytes, offset, length);
-    }
-
-    @Override
-    public int skipBytes(int amount) throws IOException {
-        return this.stream.skipBytes(amount);
-    }
-
-    @Override
-    public boolean readBoolean() throws IOException {
-        return this.stream.readBoolean();
-    }
-
-    @Override
-    public byte readByte() throws IOException {
-        return this.stream.readByte();
-    }
-
-    @Override
-    public int readUnsignedByte() throws IOException {
-        return this.stream.readUnsignedByte();
+    public LittleEndianDataInputStream(DataInputStream stream, long maxReadSize) {
+        super(stream, maxReadSize);
     }
 
     @Override
     public short readShort() throws IOException {
-        return Short.reverseBytes(this.stream.readShort());
+        this.tryRead(2);
+        return Short.reverseBytes(this.delegate().readShort());
     }
 
     @Override
     public int readUnsignedShort() throws IOException {
-        return Short.toUnsignedInt(Short.reverseBytes(this.stream.readShort()));
+        this.tryRead(2);
+        return Short.toUnsignedInt(Short.reverseBytes(this.delegate().readShort()));
     }
 
     @Override
     public char readChar() throws IOException {
-        return Character.reverseBytes(this.stream.readChar());
+        this.tryRead(2);
+        return Character.reverseBytes(this.delegate().readChar());
     }
 
     @Override
     public int readInt() throws IOException {
-        return Integer.reverseBytes(this.stream.readInt());
+        this.tryRead(4);
+        return Integer.reverseBytes(this.delegate().readInt());
     }
 
     @Override
     public long readLong() throws IOException {
-        return Long.reverseBytes(this.stream.readLong());
+        this.tryRead(8);
+        return Long.reverseBytes(this.delegate().readLong());
     }
 
     @Override
     public float readFloat() throws IOException {
-        return Float.intBitsToFloat(Integer.reverseBytes(this.stream.readInt()));
+        this.tryRead(4);
+        return Float.intBitsToFloat(Integer.reverseBytes(this.delegate().readInt()));
     }
 
     @Override
     public double readDouble() throws IOException {
-        return Double.longBitsToDouble(Long.reverseBytes(this.stream.readLong()));
-    }
-
-    @Override
-    @Deprecated
-    public String readLine() throws IOException {
-        return this.stream.readLine();
+        this.tryRead(8);
+        return Double.longBitsToDouble(Long.reverseBytes(this.delegate().readLong()));
     }
 
     @NonNull
     @Override
     public String readUTF() throws IOException {
-        byte[] bytes = new byte[this.readUnsignedShort()];
+        int size = this.readUnsignedShort();
+        this.tryRead(size + 4); // do it here, so we do not preallocate the buffer
+
+        byte[] bytes = new byte[size];
         this.readFully(bytes);
         return new String(bytes, StandardCharsets.UTF_8);
     }

@@ -15,43 +15,76 @@ import static java.util.Objects.requireNonNull;
 
 public class NbtUtils {
     public static final int MAX_DEPTH = 16;
+    public static final long MAX_READ_SIZE = 0; // Disabled by default
 
     private NbtUtils() {
     }
 
     public static NBTInputStream createReader(InputStream stream, boolean internKeys, boolean internValues) {
+        return createReader(stream, internKeys, internValues, MAX_READ_SIZE);
+    }
+
+    public static NBTInputStream createReader(InputStream stream, boolean internKeys, boolean internValues, long maxReadSize) {
         requireNonNull(stream, "stream");
-        return new NBTInputStream(new DataInputStream(stream), internKeys, internValues);
+        return new NBTInputStream(new DataInputStream(stream), internKeys, internValues, maxReadSize);
     }
 
     public static NBTInputStream createReaderLE(InputStream stream, boolean internKeys, boolean internValues) {
+        return createReaderLE(stream, internKeys, internValues, MAX_READ_SIZE);
+    }
+
+    public static NBTInputStream createReaderLE(InputStream stream, boolean internKeys, boolean internValues, long maxReadSize) {
         requireNonNull(stream, "stream");
-        return new NBTInputStream(new LittleEndianDataInputStream(stream), internKeys, internValues);
+        return new NBTInputStream(new LittleEndianDataInputStream(stream, maxReadSize), internKeys, internValues);
     }
 
     public static NBTInputStream createGZIPReader(InputStream stream, boolean internKeys, boolean internValues) throws IOException {
-        return createReader(new GZIPInputStream(stream), internKeys, internValues);
+        return createGZIPReader(stream, internKeys, internValues, MAX_READ_SIZE);
+    }
+
+    public static NBTInputStream createGZIPReader(InputStream stream, boolean internKeys, boolean internValues, long maxReadSize) throws IOException {
+        return createReader(new GZIPInputStream(stream), internKeys, internValues, maxReadSize);
     }
 
     public static NBTInputStream createNetworkReader(InputStream stream, boolean internKeys, boolean internValues) {
+        return createNetworkReader(stream, internKeys, internValues, MAX_READ_SIZE);
+    }
+    
+    public static NBTInputStream createNetworkReader(InputStream stream, boolean internKeys, boolean internValues, long maxReadSize) {
         requireNonNull(stream, "stream");
-        return new NBTInputStream(new NetworkDataInputStream(stream), internKeys, internValues);
+        return new NBTInputStream(new NetworkDataInputStream(stream, maxReadSize), internKeys, internValues);
     }
 
     public static NBTInputStream createReader(InputStream stream) {
-        return createReader(stream, false, false);
+        return createReader(stream, MAX_READ_SIZE);
+    }
+    
+    public static NBTInputStream createReader(InputStream stream, long maxReadSize) {
+        return createReader(stream, false, false, maxReadSize);
     }
 
     public static NBTInputStream createReaderLE(InputStream stream) {
-        return createReaderLE(stream, false, false);
+        return createReaderLE(stream, MAX_READ_SIZE);
+    }
+    
+    public static NBTInputStream createReaderLE(InputStream stream, long maxReadSize) {
+        return createReaderLE(stream, false, false, maxReadSize);
     }
 
     public static NBTInputStream createGZIPReader(InputStream stream) throws IOException {
-        return createGZIPReader(stream, false, false);
+        return createGZIPReader(stream, MAX_READ_SIZE);
+    }
+
+    public static NBTInputStream createGZIPReader(InputStream stream, long maxReadSize) throws IOException {
+        return createGZIPReader(stream, false, false, maxReadSize);
     }
 
     public static NBTInputStream createNetworkReader(InputStream stream) {
-        return createNetworkReader(stream, false, false);
+        return createNetworkReader(stream, MAX_READ_SIZE);
+    }
+
+    public static NBTInputStream createNetworkReader(InputStream stream, long maxReadSize) {
+        return createNetworkReader(stream, false, false, maxReadSize);
     }
 
     public static NBTOutputStream createWriter(OutputStream stream) {

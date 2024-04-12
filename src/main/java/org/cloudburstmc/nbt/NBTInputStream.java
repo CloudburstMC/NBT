@@ -1,5 +1,7 @@
 package org.cloudburstmc.nbt;
 
+import org.cloudburstmc.nbt.util.stream.LimitedDataInput;
+
 import java.io.Closeable;
 import java.io.DataInput;
 import java.io.IOException;
@@ -9,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.cloudburstmc.nbt.NbtUtils.MAX_DEPTH;
+import static org.cloudburstmc.nbt.NbtUtils.MAX_READ_SIZE;
 
 public class NBTInputStream implements Closeable {
     private final DataInput input;
@@ -17,13 +20,26 @@ public class NBTInputStream implements Closeable {
     private boolean closed = false;
 
     public NBTInputStream(DataInput input, boolean internKeys, boolean internValues) {
-        this.input = Objects.requireNonNull(input, "input");
+        this(input, internKeys, internValues, MAX_READ_SIZE);
+    }
+
+    public NBTInputStream(DataInput input, boolean internKeys, boolean internValues, long maxReadSize) {
+        Objects.requireNonNull(input, "input");
+        if (input instanceof LimitedDataInput) {
+            this.input = input;
+        } else {
+            this.input = new LimitedDataInput(input, maxReadSize);
+        }
         this.internKeys = internKeys;
         this.internValues = internValues;
     }
 
     public NBTInputStream(DataInput input) {
         this(input, false, false);
+    }
+
+    public NBTInputStream(DataInput input, long maxReadSize) {
+        this(input, false, false, maxReadSize);
     }
 
     public Object readTag() throws IOException {
