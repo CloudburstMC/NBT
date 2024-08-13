@@ -106,7 +106,9 @@ public class NbtUtils {
     }
 
     public static String toString(Object o) {
-        if (o instanceof Byte) {
+        if (o == null) {
+            return "null";
+        } else if (o instanceof Byte) {
             return ((byte) o) + "b";
         } else if (o instanceof Short) {
             return ((short) o) + "s";
