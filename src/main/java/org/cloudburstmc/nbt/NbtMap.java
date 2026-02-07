@@ -386,12 +386,14 @@ public class NbtMap extends AbstractMap<String, Object> {
     public int hashCode() {
         if (this.hashCodeGenerated)
             return this.hashCode;
-        int h = 0;
-        for (Entry<String, Object> stringObjectEntry : this.map.entrySet())
-            h += stringObjectEntry.hashCode();
-        this.hashCode = h;
+        int result = 1;
+        for (Entry<String, Object> stringObjectEntry : this.map.entrySet()) {
+            result = 31 * result + (stringObjectEntry.getKey().hashCode()
+                    ^ NbtUtils.hashCode(stringObjectEntry.getValue()));
+        }
+        this.hashCode = result;
         this.hashCodeGenerated = true;
-        return h;
+        return result;
     }
 
     @Override

@@ -175,4 +175,17 @@ public class NbtUtils {
         }
         return r.toString();
     }
+
+    static int hashCode(Object object) {
+        if (object instanceof byte[]) {
+            return Arrays.hashCode((byte[]) object);
+        }
+        if (object instanceof int[]) {
+            return Arrays.hashCode((int[]) object);
+        }
+        if (object instanceof long[]) {
+            return Arrays.hashCode((long[]) object);
+        }
+        return object.hashCode();
+    }
 }

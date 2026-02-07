@@ -63,9 +63,12 @@ public class NbtList<E> extends AbstractList<E> {
 
     @Override
     public int hashCode() {
-        if (this.hashCodeGenerated) return this.hashCode;
-        int result = Objects.hash(super.hashCode(), type);
-        result = 31 * result + Arrays.deepHashCode(array);
+        if (this.hashCodeGenerated)
+            return this.hashCode;
+        int result = type.hashCode();
+        for (Object object : array) {
+            result = 31 * result + NbtUtils.hashCode(object);
+        }
         this.hashCode = result;
         this.hashCodeGenerated = true;
         return result;
