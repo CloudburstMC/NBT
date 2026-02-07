@@ -71,6 +71,7 @@ class NbtTests {
         try (NBTInputStream in = NbtUtils.createNetworkReader(bais)) {
             Object o = in.readTag();
             Assertions.assertEquals(TEST_MAP, o);
+            Assertions.assertEquals(TEST_MAP.hashCode(), o.hashCode());
         } catch (Exception e) {
             throw new AssertionError("Error whilst decoding tag", e);
         }
