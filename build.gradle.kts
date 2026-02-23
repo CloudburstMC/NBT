@@ -1,10 +1,10 @@
-@Suppress("DSL_SCOPE_VIOLATION") // https://youtrack.jetbrains.com/issue/IDEA-262280
+import org.jreleaser.model.Active
 
 plugins {
     id("java-library")
     id("maven-publish")
-    id("signing")
     alias(libs.plugins.checkerframework)
+    alias(libs.plugins.jreleaser)
 }
 
 group = "org.cloudburstmc"
@@ -25,20 +25,42 @@ dependencies {
     testAnnotationProcessor(libs.jmh.generator.annprocess)
 }
 
+checkerFramework {
+    version = libs.versions.checkerframework
+}
+
 java {
     withJavadocJar()
     withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+jreleaser {
+    signing {
+        pgp {
+            active = Active.ALWAYS
+            armored = true
+        }
+    }
+    deploy {
+        maven {
+            mavenCentral {
+                create("sonatype") {
+                    active = Active.RELEASE
+                    url = "https://central.sonatype.com/api/v1/publisher"
+                    stagingRepository("build/staging-deploy")
+                }
+            }
+        }
+    }
 }
 
 publishing {
     repositories {
         maven {
-            name = "maven-deploy"
-            url = uri(System.getenv("MAVEN_DEPLOY_URL") ?: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-            credentials {
-                username = System.getenv("MAVEN_DEPLOY_USERNAME") ?: "username"
-                password = System.getenv("MAVEN_DEPLOY_PASSWORD") ?: "password"
-            }
+            uri(layout.buildDirectory.dir("staging-deploy"))
         }
     }
     publications {
@@ -72,13 +94,6 @@ publishing {
                 }
             }
         }
-    }
-}
-
-signing {
-    if (System.getenv("PGP_SECRET") != null && System.getenv("PGP_PASSPHRASE") != null) {
-        useInMemoryPgpKeys(System.getenv("PGP_SECRET"), System.getenv("PGP_PASSPHRASE"))
-        sign(publishing.publications["maven"])
     }
 }
 
