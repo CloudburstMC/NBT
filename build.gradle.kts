@@ -67,7 +67,7 @@ jreleaser {
 publishing {
     repositories {
         maven {
-            uri(layout.buildDirectory.dir("staging-deploy"))
+            url = uri(layout.buildDirectory.dir("staging-deploy"))
         }
     }
     publications {
