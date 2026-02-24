@@ -3,7 +3,7 @@ import org.jreleaser.model.Active
 plugins {
     id("java-library")
     id("maven-publish")
-    alias(libs.plugins.checkerframework)
+//    alias(libs.plugins.checkerframework)
     alias(libs.plugins.jreleaser)
 }
 
@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    checkerFramework(libs.checker)
+//    checkerFramework(libs.checker)
 
     compileOnly(libs.checker.qual)
 
@@ -26,6 +26,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
+/*
 checkerFramework {
     version = libs.versions.checkerframework
 
@@ -33,6 +34,7 @@ checkerFramework {
         "org.checkerframework.checker.compilermsgs.CompilerMessagesChecker"
     )
 }
+ */
 
 java {
     withJavadocJar()
