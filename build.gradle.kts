@@ -23,10 +23,15 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.jmh.core)
     testAnnotationProcessor(libs.jmh.generator.annprocess)
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 checkerFramework {
     version = libs.versions.checkerframework
+
+    checkers = listOf(
+        "org.checkerframework.checker.compilermsgs.CompilerMessagesChecker"
+    )
 }
 
 java {

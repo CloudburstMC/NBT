@@ -126,7 +126,7 @@ public class NBTInputStream implements Closeable {
             case LIST:
                 int typeId = input.readUnsignedByte();
                 NbtType<?> listType = NbtType.byId(typeId);
-                List<? super Object> list = new ArrayList<>();
+                List<Object> list = new ArrayList<>();
                 int listLength = input.readInt();
                 for (int i = 0; i < listLength; i++) {
                     list.add(deserialize(listType, maxDepth - 1));

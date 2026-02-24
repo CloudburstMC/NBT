@@ -8,6 +8,7 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
+import org.openjdk.jmh.runner.options.VerboseMode;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -25,7 +26,7 @@ public class NbtBenchmarkTests {
         Options opt = new OptionsBuilder()
                 // Specify which benchmarks to run.
                 // You can be more specific if you'd like to run only one benchmark per test.
-                .include(this.getClass().getName() + ".*")
+                .include(NbtBenchmarkTests.class.getName() + ".*")
                 // Set the following options as needed
                 .mode(Mode.AverageTime)
                 .timeUnit(TimeUnit.MICROSECONDS)
@@ -35,6 +36,7 @@ public class NbtBenchmarkTests {
                 .measurementIterations(10)
                 .threads(2)
                 .forks(1)
+                .verbosity(VerboseMode.NORMAL)
                 .shouldFailOnError(true)
                 .shouldDoGC(true)
                 //.jvmArgs("-XX:+UnlockDiagnosticVMOptions", "-XX:+PrintInlining")
@@ -51,6 +53,7 @@ public class NbtBenchmarkTests {
         @Setup(Level.Trial)
         public void initialize() {
             InputStream stream = NbtBenchmarkTests.class.getClassLoader().getResourceAsStream("benchmark.nbt");
+            assert stream != null;
             try (GZIPInputStream is = new GZIPInputStream(stream)) {
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
