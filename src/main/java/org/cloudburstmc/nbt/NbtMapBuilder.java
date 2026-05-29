@@ -8,7 +8,7 @@ import static java.util.Objects.requireNonNull;
 
 public class NbtMapBuilder extends LinkedHashMap<String, Object> {
 
-    NbtMapBuilder() {
+    protected NbtMapBuilder() {
     }
 
     public static NbtMapBuilder from(NbtMap map) {
