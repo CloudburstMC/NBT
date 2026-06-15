@@ -1,7 +1,7 @@
 package org.cloudburstmc.nbt;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
@@ -95,11 +95,11 @@ public class NbtMapBuilder extends LinkedHashMap<String, Object> {
         return this;
     }
 
-    public <T> NbtMapBuilder putList(String name, NbtType<T> type, List<T> list) {
-        if (!(list instanceof NbtList)) {
-            list = new NbtList<>(type, list);
+    public <T> NbtMapBuilder putList(String name, NbtType<T> type, Collection<T> collection) {
+        if (!(collection instanceof NbtList)) {
+            collection = new NbtList<>(type, collection);
         }
-        this.put(name, list);
+        this.put(name, collection);
         return this;
     }
 
