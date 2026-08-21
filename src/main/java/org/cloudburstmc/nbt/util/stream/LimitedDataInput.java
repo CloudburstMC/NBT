@@ -12,6 +12,7 @@ public class LimitedDataInput implements DataInput, Closeable {
     private final long maxReadSize;
 
     private long readSize = 0;
+    private long arrayReadSize = 0;
 
     public LimitedDataInput(DataInput delegate) {
         this(delegate, NbtUtils.MAX_READ_SIZE);
@@ -33,6 +34,13 @@ public class LimitedDataInput implements DataInput, Closeable {
         this.readSize += size;
         if (this.maxReadSize > 0 && this.readSize > this.maxReadSize) {
             throw new IOException("Read size exceeded limit: read=" + this.readSize + ", limit=" + this.maxReadSize);
+        }
+    }
+
+    public void tryReadArray(int size) throws IOException {
+        this.arrayReadSize += size;
+        if (this.maxReadSize > 0 && this.arrayReadSize > this.maxReadSize) {
+            throw new IOException("Read size exceeded limit: read=" + this.arrayReadSize + ", limit=" + this.maxReadSize);
         }
     }
 

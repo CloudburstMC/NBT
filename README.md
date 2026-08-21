@@ -9,7 +9,7 @@ An Named Binary Tag library built including VarInt support introduced by Minecra
         <dependency>
             <groupId>org.cloudburstmc</groupId>
             <artifactId>nbt</artifactId>
-            <version>3.0.0.Final</version>
+            <version>3.0.5.Final</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -17,5 +17,5 @@ An Named Binary Tag library built including VarInt support introduced by Minecra
 
 #### Gradle (Kotlin DSL)
 ```kt
-implementation("org.cloudburstmc:nbt:3.0.0.Final")
+implementation("org.cloudburstmc:nbt:3.0.5.Final")
 ```

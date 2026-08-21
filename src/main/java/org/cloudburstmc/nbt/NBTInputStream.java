@@ -14,7 +14,7 @@ import static org.cloudburstmc.nbt.NbtUtils.MAX_DEPTH;
 import static org.cloudburstmc.nbt.NbtUtils.MAX_READ_SIZE;
 
 public class NBTInputStream implements Closeable {
-    private final DataInput input;
+    private final LimitedDataInput input;
     private final boolean internKeys;
     private final boolean internValues;
     private boolean closed = false;
@@ -26,7 +26,7 @@ public class NBTInputStream implements Closeable {
     public NBTInputStream(DataInput input, boolean internKeys, boolean internValues, long maxReadSize) {
         Objects.requireNonNull(input, "input");
         if (input instanceof LimitedDataInput) {
-            this.input = input;
+            this.input = (LimitedDataInput) input;
         } else {
             this.input = new LimitedDataInput(input, maxReadSize);
         }
@@ -101,6 +101,7 @@ public class NBTInputStream implements Closeable {
                 return input.readDouble();
             case BYTE_ARRAY:
                 int arraySize = input.readInt();
+                input.tryReadArray(arraySize);
                 byte[] bytes = new byte[arraySize];
                 input.readFully(bytes);
                 return bytes;
@@ -128,12 +129,16 @@ public class NBTInputStream implements Closeable {
                 NbtType<?> listType = NbtType.byId(typeId);
                 List<Object> list = new ArrayList<>();
                 int listLength = input.readInt();
+                if (listType.getEnum() == NbtType.Enum.END) {
+                    return new NbtList(NbtType.END, list);
+                }
                 for (int i = 0; i < listLength; i++) {
                     list.add(deserialize(listType, maxDepth - 1));
                 }
                 return new NbtList(listType, list);
             case INT_ARRAY:
                 arraySize = input.readInt();
+                input.tryReadArray(arraySize * 4);
                 int[] ints = new int[arraySize];
                 for (int i = 0; i < arraySize; i++) {
                     ints[i] = input.readInt();
@@ -141,6 +146,7 @@ public class NBTInputStream implements Closeable {
                 return ints;
             case LONG_ARRAY:
                 arraySize = input.readInt();
+                input.tryReadArray(arraySize * 8);
                 long[] longs = new long[arraySize];
                 for (int i = 0; i < arraySize; i++) {
                     longs[i] = input.readLong();
@@ -155,8 +161,8 @@ public class NBTInputStream implements Closeable {
     public void close() throws IOException {
         if (closed) return;
         closed = true;
-        if (input instanceof Closeable) {
-            ((Closeable) input).close();
+        if (input != null) {
+            input.close();
         }
     }
 }
