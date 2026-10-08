@@ -155,11 +155,12 @@ public class NbtUtils {
     }
 
     public static String indent(String string) {
-        StringBuilder builder = new StringBuilder("  " + string);
-        for (int i = 2; i < builder.length(); i++) {
-            if (builder.charAt(i) == '\n') {
-                builder.insert(i + 1, "  ");
-                i += 2;
+        StringBuilder builder = new StringBuilder(string.length() + 2).append("  ");
+        for (int i = 0; i < string.length(); i++) {
+            char c = string.charAt(i);
+            builder.append(c);
+            if (c == '\n') {
+                builder.append("  ");
             }
         }
         return builder.toString();
