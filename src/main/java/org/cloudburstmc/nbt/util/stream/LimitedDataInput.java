@@ -176,8 +176,18 @@ public class LimitedDataInput implements DataInput, Closeable {
     @Override
     public String readUTF() throws IOException {
         String utf = this.delegate.readUTF();
-        this.tryRead(utf.length()); // not ideal, but we do not have a better way to estimate the size
+        this.tryRead(utfSize(utf));
         return utf;
+    }
+
+    // The 2 byte length plus the fewest UTF-8 bytes the chars take
+    private static int utfSize(String utf) {
+        int size = 2;
+        for (int i = 0; i < utf.length(); i++) {
+            char c = utf.charAt(i);
+            size += c < 0x80 ? 1 : c < 0x800 || Character.isSurrogate(c) ? 2 : 3;
+        }
+        return size;
     }
 
     public DataInput delegate() {
