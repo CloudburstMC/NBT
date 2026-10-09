@@ -7,6 +7,7 @@ import java.io.DataInput;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
@@ -15,6 +16,14 @@ import static org.cloudburstmc.nbt.NbtUtils.MAX_DEPTH;
 import static org.cloudburstmc.nbt.NbtUtils.MAX_READ_SIZE;
 
 public class NBTInputStream implements Closeable {
+    private static final NbtList<?>[] EMPTY_LISTS = new NbtList<?>[NbtType.Enum.values().length];
+
+    static {
+        for (int id = 0; id < EMPTY_LISTS.length; id++) {
+            EMPTY_LISTS[id] = emptyList(NbtType.byId(id));
+        }
+    }
+
     private final LimitedDataInput input;
     private final boolean internKeys;
     private final boolean internValues;
@@ -103,32 +112,32 @@ public class NBTInputStream implements Closeable {
             case BYTE_ARRAY:
                 return input.readBytes(readArrayLength(Byte.BYTES));
             case STRING:
-                if (this.internValues) {
-                    return input.readUTF().intern();
-                } else {
-                    return input.readUTF();
-                }
+                return readString(this.internValues);
             case COMPOUND:
-                LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-                NbtType<?> nbtType;
-                while ((nbtType = NbtType.byId(input.readUnsignedByte())) != NbtType.END) {
-                    String name;
-                    if (this.internKeys) {
-                        name = input.readUTF().intern();
-                    } else {
-                        name = input.readUTF();
-                    }
-                    map.put(name, deserialize(nbtType, maxDepth - 1));
+                NbtType<?> nbtType = NbtType.byId(input.readUnsignedByte());
+                if (nbtType == NbtType.END) {
+                    return NbtMap.EMPTY;
                 }
+                String name = readString(this.internKeys);
+                Object value = deserialize(nbtType, maxDepth - 1);
+                nbtType = NbtType.byId(input.readUnsignedByte());
+                if (nbtType == NbtType.END) {
+                    return new NbtMap(Collections.singletonMap(name, value));
+                }
+                LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+                map.put(name, value);
+                do {
+                    map.put(readString(this.internKeys), deserialize(nbtType, maxDepth - 1));
+                } while ((nbtType = NbtType.byId(input.readUnsignedByte())) != NbtType.END);
                 return new NbtMap(map);
             case LIST:
                 int typeId = input.readUnsignedByte();
                 NbtType<?> listType = NbtType.byId(typeId);
-                List<Object> list = new ArrayList<>();
                 int listLength = input.readInt();
-                if (listType.getEnum() == NbtType.Enum.END) {
-                    return new NbtList(NbtType.END, list);
+                if (listType.getEnum() == NbtType.Enum.END || listLength <= 0) {
+                    return EMPTY_LISTS[typeId];
                 }
+                List<Object> list = new ArrayList<>();
                 for (int i = 0; i < listLength; i++) {
                     list.add(deserialize(listType, maxDepth - 1));
                 }
@@ -165,6 +174,18 @@ public class NBTInputStream implements Closeable {
         }
         input.tryReadArray(Math.multiplyExact((long) length, (long) elementSize));
         return length;
+    }
+
+    private String readString(boolean intern) throws IOException {
+        String string = input.readUTF();
+        if (string.isEmpty()) {
+            return "";
+        }
+        return intern ? string.intern() : string;
+    }
+
+    private static <E> NbtList<E> emptyList(NbtType<E> type) {
+        return new NbtList<>(type, Collections.emptyList());
     }
 
     @Override
