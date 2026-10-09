@@ -5,8 +5,11 @@ import org.cloudburstmc.nbt.NbtUtils;
 import java.io.Closeable;
 import java.io.DataInput;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class LimitedDataInput implements DataInput, Closeable {
+    // Initial buffer size for length prefixed values, doubled as needed
+    private static final int MAX_PREALLOCATED_BYTES = 64 * 1024;
 
     private final DataInput delegate;
     private final long maxReadSize;
@@ -30,18 +33,59 @@ public class LimitedDataInput implements DataInput, Closeable {
         }
     }
 
-    protected void tryRead(int size) throws IOException {
-        this.readSize += size;
+    protected void tryRead(long size) throws IOException {
+        this.readSize += requireNonNegative(size);
         if (this.maxReadSize > 0 && this.readSize > this.maxReadSize) {
             throw new IOException("Read size exceeded limit: read=" + this.readSize + ", limit=" + this.maxReadSize);
         }
     }
 
-    public void tryReadArray(int size) throws IOException {
-        this.arrayReadSize += size;
+    public void tryReadArray(long size) throws IOException {
+        this.arrayReadSize += requireNonNegative(size);
         if (this.maxReadSize > 0 && this.arrayReadSize > this.maxReadSize) {
             throw new IOException("Read size exceeded limit: read=" + this.arrayReadSize + ", limit=" + this.maxReadSize);
         }
+    }
+
+    private static long requireNonNegative(long size) throws IOException {
+        if (size < 0) {
+            throw new IOException("Negative read size: " + size);
+        }
+        return size;
+    }
+
+    /**
+     * Reads {@code length} bytes.
+     *
+     * @param length The number of bytes to read
+     * @return The bytes read
+     * @throws IOException If the length is negative or the input ends first
+     */
+    public byte[] readBytes(int length) throws IOException {
+        if (length < 0) {
+            throw new IOException("Negative length: " + length);
+        }
+        byte[] bytes = new byte[Math.min(length, MAX_PREALLOCATED_BYTES)];
+        int read = 0;
+        while (true) {
+            this.readFully(bytes, read, bytes.length - read);
+            read = bytes.length;
+            if (read == length) {
+                return bytes;
+            }
+            bytes = Arrays.copyOf(bytes, (int) Math.min(length, 2L * read));
+        }
+    }
+
+    /**
+     * The capacity to start an array of {@code length} elements with, growing it as they arrive.
+     *
+     * @param length      The number of elements
+     * @param elementSize The bytes one element takes in memory
+     * @return The initial capacity
+     */
+    public static int initialCapacity(int length, int elementSize) {
+        return Math.min(length, MAX_PREALLOCATED_BYTES / elementSize);
     }
 
     @Override

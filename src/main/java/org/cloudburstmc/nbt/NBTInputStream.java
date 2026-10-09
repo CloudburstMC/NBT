@@ -6,6 +6,7 @@ import java.io.Closeable;
 import java.io.DataInput;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
@@ -100,11 +101,7 @@ public class NBTInputStream implements Closeable {
             case DOUBLE:
                 return input.readDouble();
             case BYTE_ARRAY:
-                int arraySize = input.readInt();
-                input.tryReadArray(arraySize);
-                byte[] bytes = new byte[arraySize];
-                input.readFully(bytes);
-                return bytes;
+                return input.readBytes(readArrayLength(Byte.BYTES));
             case STRING:
                 if (this.internValues) {
                     return input.readUTF().intern();
@@ -137,24 +134,37 @@ public class NBTInputStream implements Closeable {
                 }
                 return new NbtList(listType, list);
             case INT_ARRAY:
-                arraySize = input.readInt();
-                input.tryReadArray(arraySize * 4);
-                int[] ints = new int[arraySize];
+                int arraySize = readArrayLength(Integer.BYTES);
+                int[] ints = new int[LimitedDataInput.initialCapacity(arraySize, Integer.BYTES)];
                 for (int i = 0; i < arraySize; i++) {
+                    if (i == ints.length) {
+                        ints = Arrays.copyOf(ints, (int) Math.min(arraySize, 2L * i));
+                    }
                     ints[i] = input.readInt();
                 }
                 return ints;
             case LONG_ARRAY:
-                arraySize = input.readInt();
-                input.tryReadArray(arraySize * 8);
-                long[] longs = new long[arraySize];
+                arraySize = readArrayLength(Long.BYTES);
+                long[] longs = new long[LimitedDataInput.initialCapacity(arraySize, Long.BYTES)];
                 for (int i = 0; i < arraySize; i++) {
+                    if (i == longs.length) {
+                        longs = Arrays.copyOf(longs, (int) Math.min(arraySize, 2L * i));
+                    }
                     longs[i] = input.readLong();
                 }
                 return longs;
         }
 
         throw new IllegalArgumentException("Unknown type " + type);
+    }
+
+    private int readArrayLength(int elementSize) throws IOException {
+        int length = input.readInt();
+        if (length < 0) {
+            throw new IOException("Negative array length: " + length);
+        }
+        input.tryReadArray(Math.multiplyExact((long) length, (long) elementSize));
+        return length;
     }
 
     @Override

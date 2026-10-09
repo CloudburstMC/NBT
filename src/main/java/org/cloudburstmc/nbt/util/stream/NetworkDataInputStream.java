@@ -43,10 +43,10 @@ public class NetworkDataInputStream extends LittleEndianDataInputStream {
     @NonNull
     public String readUTF() throws IOException {
         int length = VarInts.readUnsignedInt(this.delegate());
-        this.tryRead(length + 4);
-
-        byte[] bytes = new byte[length];
-        readFully(bytes);
-        return new String(bytes, StandardCharsets.UTF_8);
+        if (length < 0) {
+            throw new IOException("Negative string length: " + length);
+        }
+        this.tryRead((long) length + 4);
+        return new String(this.readBytes(length), StandardCharsets.UTF_8);
     }
 }

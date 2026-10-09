@@ -71,9 +71,6 @@ public class LittleEndianDataInputStream extends LimitedDataInput {
     public String readUTF() throws IOException {
         int size = this.readUnsignedShort();
         this.tryRead(size + 4); // do it here, so we do not preallocate the buffer
-
-        byte[] bytes = new byte[size];
-        this.readFully(bytes);
-        return new String(bytes, StandardCharsets.UTF_8);
+        return new String(this.readBytes(size), StandardCharsets.UTF_8);
     }
 }
